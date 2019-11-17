@@ -1,0 +1,4 @@
+﻿  Test.cpp
+E:\c++\比赛啊\codeforces\第三次个人赛\Test\Test.cpp(9,22): warning C4244:  “初始化”: 从“double”转换到“int”，可能丢失数据
+E:\c++\比赛啊\codeforces\第三次个人赛\Test\Test.cpp(69,1): error C4996:  'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1274): message :  参见“scanf”的声明

@@ -1,0 +1,33 @@
+{
+    "configurations": [{
+        "name": "MinGW",
+        "intelliSenseMode": "gcc-x64",
+        "compilerPath": "E:/VSCode/MinGW/mingw64/bin/x86_64-w64-mingw32-gcc.exe",
+        "cStandard": "c11",
+        "cppStandard": "c++17",
+        "includePath": [
+            "${workspaceFolder}/**",
+            "E:/VSCode/MinGW/mingw64/x86_64-w64-mingw32/include",
+            "E:/VSCode/MinGW/mingw64//lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++",
+            "E:/VSCode/MinGW/mingw64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/tr1"
+        ],
+        "defines": [
+            "_DEBUG",
+            "UNICODE",
+            "_UNICODE",
+            "__GNUC__=7",
+            "__cdecl=__attribute__((__cdecl__))"
+        ],
+        "browse": {
+            "path": [
+                "${workspaceFolder}/**",
+                "E:/VSCode/MinGW/mingw64/x86_64-w64-mingw32/include",
+                "E:/VSCode/MinGW/mingw64/gcc/x86_64-w64-mingw32/7.3.0/include/c++",
+                "E:/VSCode/MinGW/mingw64/gcc/x86_64-w64-mingw32/7.3.0/include/c++/tr1"
+            ],
+            "limitSymbolsToIncludedHeaders": true,
+            "databaseFilename": ""
+        }
+    }],
+    "version": 4
+}
