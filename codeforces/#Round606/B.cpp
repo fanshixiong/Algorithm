@@ -1,8 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 const int maxn = 2e5+10;
-const int m = 1e9+1;
-bool vis[m];
 int a[maxn];
 
 struct node{
@@ -15,7 +13,7 @@ struct node{
 };
 priority_queue<node> q;
 void solve(){
-    memset(vis, 0, sizeof(vis));
+    
     while(!q.empty()){
         q.pop();
     }
@@ -37,6 +35,7 @@ void solve(){
         }
     }
     int cnt = 0;
+    map<int, int> vis;
     while(!q.empty()){
         node tp = q.top();
         q.pop();
