@@ -27,5 +27,6 @@
     "C_Cpp.clang_format_sortIncludes": true,
     "files.associations": {
         "iosfwd": "cpp"
-    }, // 格式化时调整include的顺序（按字母排序）
+    },
+    "C_Cpp.errorSquiggles": "Disabled", // 格式化时调整include的顺序（按字母排序）
 }
