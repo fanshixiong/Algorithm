@@ -1,3 +1,7 @@
+/*状态压缩DP
+
+*/
+
 #include<bits/stdc++.h>
 using namespace std;
 const int mod = 1e8;
