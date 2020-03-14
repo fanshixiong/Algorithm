@@ -1,34 +1,27 @@
 #include<bits/stdc++.h>
 using namespace std;
-
+const int maxn = 2e5 + 5;
+int p[maxn], cnt[maxn];
 void solve(){
-    int a[205], vis[205], ans[205];
-    memset(vis, 0, sizeof(vis));
-    int n; cin >> n;
-    for (int i = 0; i < n; i++){
-        cin >> a[i];
-        vis[a[i]] = 1;
-        ans[2 * i] = a[i];
+    memset(cnt, 0, sizeof(cnt));
+    int n, m;
+    cin >> n >> m;
+    string s; cin >> s;
+    for(int i = 0; i < m; i++){
+        cin >> p[i];
+        cnt[p[i]]++;
     }
-    for (int i = 0; i < n; i++){
-        bool yes = 0;
-        for (int j = 1; j <= 2 * n; j++){
-            if(vis[j])continue;
-            if(j > ans[2*i]){
-                ans[2 * i + 1] = j;
-                yes = 1;
-                vis[j] = 1;
-                break;
-            }
-        }
-        if(!yes){
-            cout << -1 << endl;
-            return;
-        }
+    for (int i = n - 1; i > 0; i--){
+        cnt[i] += cnt[i + 1];
     }
-
-    for (int i = 0; i < 2 * n; i++){
-        cout << ans[i] << " ";
+    int chart[27];
+    memset(chart, 0, sizeof(chart));
+    for (int i = 0; i < n; i++){
+        //cout << cnt[i+1] << " ";
+        chart[s[i] - 'a'] += (cnt[i+1]+1);
+    }
+    for (int i = 0; i < 26; i++){
+        cout << chart[i] << " ";
     }
     cout << endl;
 }

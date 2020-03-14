@@ -1,48 +1,31 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long
-#define pll pair<ll, ll> 
-const int maxn = 2e5 + 10;
-ll a[maxn], t[maxn];
-map<ll, ll> fa;
-pll q[maxn];
-bool cmp(pll &a, pll &b){
-    if(a.second == b.second){
-        return a.first < b.first;
-    }
-    return a.second > b.second;
-}
-
-ll find(ll x){
-    return fa[x] == 0 ? x : fa[x] = find(fa[x]);
-}
-void unit(ll x, ll y){
-    x = find(x), y = find(y);
-    if(x != y)
-        fa[x] = y;
-}
-int main(){
-    int n;
-
-    cin >> n;
-    for (int i = 0; i<n; i++){
-        cin >> a[i];
-    }
-    for (int i = 0; i<n; i++){
-        cin >> t[i];
-        q[i].first = a[i];
-        q[i].second = t[i];
-    }
-    sort(q, q + n, cmp);
-    /*9for (int i = 0; i < n; i++){
-        cout << q[i].first << " " << q[i].second << endl;
-    }*/
-    ll ans = 0;
-    for (int i = 0; i < n; i++){
-        ll x = find(q[i].first);
-        ans += (x - q[i].first) * q[i].second;
-        unit(x, x + 1);
+const int maxn = 2e5 + 5;
+int p[maxn], cnt[maxn];
+void solve(){
+    int a, b, c;
+    cin >> a >> b >> c;
+    int ans = 1e9, ansa, ansb, ansc;
+    for (int i = 1; i <= 11000; i++){
+        for (int j = 1; i * j <= 11000; j++){
+            for (int k = 1; i * j * k <= 11000; k++){
+                int A = i, B = i * j, C = i * j * k;
+                if(ans > abs(A-a) + abs(B-b) + abs(C-c)){
+                    ans = abs(A - a) + abs(B - b) + abs(C - c);
+                    ansa = A, ansb = B, ansc = C;
+                }
+            }
+        }
     }
     cout << ans << endl;
+    cout << ansa << " " << ansb << " " << ansc << endl;
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    int t;
+    cin >> t;
+    while(t--){
+        solve();
+    }
     return 0;
 }
