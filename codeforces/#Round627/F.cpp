@@ -3,6 +3,8 @@ using namespace std;
 const int maxn = 2e5 + 10;
 int a[maxn], dp[maxn], ans[maxn];
 vector<int> G[maxn];
+
+
 void dfs1(int v, int fa){
     dp[v] = a[v];
     for (auto u : G[v]){
@@ -12,6 +14,7 @@ void dfs1(int v, int fa){
         dp[v] += max(dp[u], 0);
     }
 }
+
 void dfs2(int v, int fa, int sum){
     ans[v] = sum + dp[v];
     for (auto u: G[v]){
@@ -38,6 +41,6 @@ int main(){
     dfs2(1, -1, 0);
     for (int i = 1; i <= n; i++){
         cout << ans[i] << " ";
-    }
+    }       
     return 0;
 }
