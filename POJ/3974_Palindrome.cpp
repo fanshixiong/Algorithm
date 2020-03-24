@@ -12,8 +12,8 @@ string Manacher(string s1){
     }
     vector<int> p(s.size(), 0);
     int c = 0, r = 0, maxlen = 0, maxpoint = 0;
-    for (int i = 0; i < s.size(); i++){
-        p[i] = r > i + p[i] ? min(p[2 * c - 1], r - i) : 1;
+    for (int i = 1; i < s.size(); i++){
+        p[i] = r > i + p[i] ? min(p[2 * c - i], r - i) : 1;
         while(s[i+p[i]] == s[i-p[i]]) ++p[i];
         if(r < i+p[i]){
             c = i; r = i+p[i];
