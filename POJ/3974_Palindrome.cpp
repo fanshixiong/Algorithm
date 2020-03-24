@@ -22,7 +22,7 @@ string Manacher(string s1){
             maxlen = p[i]; maxpoint = i;
         }
     }
-    return s.substr((maxpoint - maxlen) / 2, maxlen - 1);
+    return s1.substr((maxpoint - maxlen) / 2, maxlen - 1);
 }
 int main(){
     ios_base::sync_with_stdio(0);
