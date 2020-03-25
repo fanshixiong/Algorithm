@@ -136,145 +136,112 @@ AC代码如下：
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
-const int maxn = 100010;
-const int maxa = 1000010;
+#define pb push_back
+#define mk make_pair
+
+const int maxa = 1e6 + 10;
+const int maxn = 1e5 + 10;
 int n, a[maxn], maxx;
 
-vector<int> prime;
-bool isp[maxa];
-int pr_tot;
+vector<int> prime, p[maxa];
+bool isprm[maxa], vis[maxa];
 
-bool changed[maxa]; 
-vector<int> p[maxa]; 
+int totPrm;
+vector<int> G[maxa];
 
-int h[maxa], en;
-struct Edge
-{
-    int u;
-    int v;
-    int next;
-};
-Edge e[2 * maxn];
+int ans, dis[maxa];
 
-int ans;
-int dis[maxa];
-//线性素数筛法
-void find_prime(int x)
-{
-    fill(isp + 2, isp + x + 1, true);
-    for(int i = 2; i <= x; i++)
-    {
-        if(isp[i])
-        {
-            prime.push_back(i);
-            pr_tot++;
+void Prime(int x){
+    memset(isprm, 1, sizeof(isprm));
+    prime.pb(1); totPrm++;
+    for (int i = 2; i <= x; i++){
+        if(isprm[i]){
+            prime.pb(i);
+            totPrm++;
         }
-        for(int j = 0; j < pr_tot && i * prime[j] <= x; j++)
-        {
-            isp[i * prime[j]] = false;
-            if(i % prime[j] == 0)
-                break;
+        for (int j = 1; j < totPrm && i * prime[j] <= x; j++){
+            isprm[i * prime[j]] = 0;
+            if(i%prime[j] == 0){ break; }
         }
     }
-    return;
 }
-//分解质因数并将该数简化
-void divide(int x)
-{
+
+void divide(int x){
     int var = x;
-    for(int i = 2; i * i <= var; i++)
-        if(x % i == 0)
-        {
-            int index = 0;
-            while(x % i == 0)
-            {
-                x /= i;
-                index++;
-            }
-            if(index % 2 == 1)
-                p[var].push_back(i);
+    for (int i = 2; i * i <= var; i++){
+        if(x % i != 0)
+            continue;
+        int cnt = 0;
+        while(x % i == 0){
+            cnt++;
+            x /= i;
         }
-    if(isp[x])
-        p[var].push_back(x);
-    return;
+        if(cnt & 1){
+            p[var].pb(i);
+        }
+    }
+    if(isprm[x]){
+        p[var].pb(x);
+    }
 }
-//建边
-void addedge(int u, int v)
-{
-    en++;
-    e[en].u = u;
-    e[en].v = v;
-    e[en].next = h[u];
-    h[u] = en;
-    return;
-}
-//bfs求最小环
-void bfs()
-{
-    ans = INT_MAX;
-    prime.insert(prime.begin(), 1);
-    for(int i = 0; i <= pr_tot; i++)
-    {
-        if((long long)prime[i] * prime[i] > maxx)
-            break;
-        queue<pair<int, int> > q;
-        fill(dis + 1, dis + maxx + 1, INT_MAX);
-        q.push(make_pair(prime[i], 0));
+
+bool bfs(){
+    ans = 0x3f3f3f3f;
+    for (int i = 0; i < totPrm; i++){
+        if(prime[i] * prime[i] > maxx) break;
+        queue<pair<int, int>> q;
+        memset(dis, 0x3f3f3f3f, sizeof(dis));
+        q.push(mk(prime[i], 0));
         dis[prime[i]] = 0;
-        while(!q.empty())
-        {
-            pair<int,int> tmp = q.front();
+        while(!q.empty()){
+            pair<int, int> tmp = q.front();
             q.pop();
             int u = tmp.first, fa = tmp.second;
-            for(int j = h[u]; j != 0; j = e[j].next)
-            {
-                int v = e[j].v;
-                if(v == fa)
-                    continue;
-                if(dis[v] == INT_MAX && v != prime[i])
-                {
+            for (int j = 0; j < G[u].size(); j++){
+                int v = G[u][j];
+                if(v == fa) continue;
+                if(dis[v] == 0x3f3f3f3f && v != prime[i]){
                     dis[v] = dis[u] + 1;
-                    q.push(make_pair(v, u));
+                    q.push(mk(v, u));
                 }
-                else
-                    ans = min(ans, dis[u] + dis[v] + 1);    
+                else{
+                    ans = min(ans, dis[u] + dis[v] + 1);
+                }
             }
         }
     }
-    if(ans == INT_MAX)
+    if(ans == 0x3f3f3f3f)
         ans = -1;
-    return;
 }
-
-int main()
-{
+void solve(){
     cin >> n;
-    for(int i = 1; i <= n; i++)
-    {
+    for (int i = 0; i < n; i++){
         cin >> a[i];
         maxx = max(maxx, a[i]);
     }
-    find_prime(maxx);
-    for(int i = 1; i <= n; i++)
-    {
-        if(!changed[a[i]])
+    Prime(maxx);
+    for (int i = 0; i < n; i++){
+        if(!vis[a[i]]){
             divide(a[i]);
-        changed[a[i]] = true;
+        }
+        vis[a[i]] = 1;
     }
-    for(int i = 1; i <= n; i++)
-    {
-        if(p[a[i]].empty())
-        {
+    for (int i = 0; i < n; i++){
+        if(p[a[i]].empty()){
             cout << 1 << endl;
-            return 0;
+            return;
         }
         if(p[a[i]].size() == 1)
-            p[a[i]].push_back(1);
-        addedge(p[a[i]][0], p[a[i]][1]);
-        addedge(p[a[i]][1], p[a[i]][0]);
+            p[a[i]].pb(1);
+        G[p[a[i]][0]].pb(p[a[i]][1]);
+        G[p[a[i]][1]].pb(p[a[i]][0]);
     }
     bfs();
     cout << ans << endl;
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    solve();
     return 0;
 }
 ```
