@@ -1,9 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
+#define ll long long
 void solve(){
-    int n, k;
+    ll n, k;
     cin >> n >> k;
-    if((n-1) / 2 + 1 < k){
+    if((n-1) / 2 + 1 < k ||  k * k > n){
         cout << "NO" << endl;
         return;
     }
