@@ -12,7 +12,7 @@ int main(){
     }
     string s = "";
     s += string(n - 1, 'U');
-    s += string(m - 1, 'L');
+    s += string(m - 1, 'L');     
     for (int i = 1; i <= n; ++i) {
         if (i & 1) {
             s += string(m - 1, 'R');
