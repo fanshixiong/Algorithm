@@ -13,42 +13,40 @@ bool endsWith(string s, string sub){
 
 string solve(){
     int n; cin >> n;
-    string s[n];
+    vector<string> s(n);
     for (int i = 0; i < n; i++) cin >> s[i];
-    string ans;
-    vector<string> prefix, suffix;
-    for (int i = 0; i < n; i++){
-        int j = 0;
-        while(s[i][j++] != '*'){}
-        string tmp = s[i].substr(0, j);
-        if(j > 1) prefix.push_back(tmp);
-        j = s[i].size() - 1;
-        while(s[i][j--] != '*'){}
-        tmp = s[i].substr(j, s[i].size() - j);
-        if(j < s[i].size() - 2) suffix.push_back(tmp);
-    }
-    sort(prefix.begin(), prefix.end());
-    sort(suffix.begin(), suffix.end());
-    string pre = prefix[prefix.end() - 1], suf = suffix[suffix.end() - 1];
-    string mid = "";
-    for (int i = 0; i < suffix.size() - 1; i++){
-        if(!endwith(suf, suffix[i])){
-            return "";
+    string prefix = "", suffix = "";
+    vector<string> mid;
+    for (string& str : s){
+        int star = -1;
+        for (int i = 0; i < (int)str.size(); i++){
+            if(str[i] == '*'){
+                if (star == -1){
+                    string sub = str.substr(0, i);
+                    if(prefix.size() < sub.size()) swap(prefix, sub);
+                    if(!startsWith(prefix, sub)) return "*";
+                }
+                else{
+                    mid.push_back(str.substr(star + 1, i - star - 1));
+                }
+                star = i;
+            }
         }
+        string sub = str.substr(star + 1);
+        if(suffix.size() < sub.size()) swap(suffix, sub);
+        if(!endsWith(suffix, sub)) return "*";
     }
-    return suf;
-    for (int i = 0; i < prefix.size(); i++){
-        if(!startsWith(pre, prefix[i])){
-            return "";
-        }
-    }
+    string ans = prefix;
+    for(string& s : mid) ans += s;
+    ans += suffix;
+    return ans;
 }
 int main(){
     IOS;
     int t, k = 0;
     cin >> t;
     while(k++ < t){
-        cout << "Case #" << k << ": " << solve();
+        cout << "Case #" << k << ": " << solve() << endl;
     }
     return 0;
 }
