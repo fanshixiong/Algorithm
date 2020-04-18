@@ -7,7 +7,7 @@ int a[maxn];
 bool cmp(int a, int b){ return a > b; }
 void solve(){
     int n, x; cin >> n >> x;
-    int sum = 0;
+    ll sum = 0;
     int i, j = 0;
     for(i = 1; i <= n; i++) cin >> a[i];
     sort(a + 1, a + 1 + n, cmp);
