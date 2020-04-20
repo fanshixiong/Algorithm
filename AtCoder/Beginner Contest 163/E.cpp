@@ -4,35 +4,35 @@ using namespace std;
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 2020;
 const int mod = 1e9 + 7;
-int a[maxn];
-bool cmp(pair<int, int> a, pair<int, int> b){
-    if(a.first == b.first) return a.second > b.second;
+ll a[maxn];
+ll dp[maxn][maxn];
+bool cmp(const pair<ll, ll> &a, const pair<ll, ll> &b){
     return a.first > b.first;
 }
 void solve(){
     int n; cin >> n;
-    vector<pair<int, int>> v;
-    for(int i = 1; i <= n; i++){
+    vector<pair<ll, ll>> v;
+    for(ll i = 1; i <= n; i++){
         cin >> a[i];
         v.push_back(make_pair(a[i], i));
     }
     sort(v.begin(), v.end(), cmp);
-    int left = 1, right = n;
+    //memset(dp, 0, sizeof dp);
+    /*
+        枚举最大的放在最左边还是最右边，
+        放在离他最远的地方不是最大的答案
+    */
+    dp[1][n] = 0;
+    for(int i = 1; i <= n; i++){
+        for(int j = 0; j <= i; j++){
+            int l = j + 1, r = n - i + j;
+            if(l - 1 >= 1) dp[l][r] = max(dp[l][r], dp[l - 1][r] + v[i - 1].first * abs(v[i - 1].second - l + 1));
+            if(r + 1 <= n) dp[l][r] = max(dp[l][r], dp[l][r + 1] + v[i - 1].first * abs(v[i - 1].second - r - 1));
+        }
+    }
     ll ans = 0;
-    for(auto x : v){
-        int u = x.first, p = x.second;
-        int pos = 0;
-        
-        if(abs(p - left) <= abs(p - right)){
-            pos = abs(p - right);
-            right--;
-        }
-        else{
-            pos = abs(p - left);
-            left++;
-        }
-        ans += (1ll) * (pos * u);
-        cout << u << " " << p << " " << left << " " << right << " " << pos << " " << ans << endl;
+    for(int i = 1; i <= n; i++){
+        ans = max(ans, dp[i][i] + v[n - 1].first * abs(i - v[n - 1].second));
     }
     cout << ans << endl;
 }
