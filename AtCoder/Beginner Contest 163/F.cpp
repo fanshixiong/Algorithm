@@ -5,6 +5,7 @@ using namespace std;
 const int maxn = 2e5 + 10;
 void solve(){
     int n; cin >> n;
+    cout << 1 << endl;
 }
 int main(){
     IOS; int t = 1;

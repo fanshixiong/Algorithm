@@ -6,6 +6,8 @@ const int maxn = 2020;
 const int mod = 1e9 + 7;
 ll a[maxn];
 ll dp[maxn][maxn];
+/*dp[l][r]：表示剩下的值会被放到[l, r]中，已经放好的点的最大快乐值是多少 
+*/
 bool cmp(const pair<ll, ll> &a, const pair<ll, ll> &b){
     return a.first > b.first;
 }
@@ -21,6 +23,7 @@ void solve(){
     /*
         枚举最大的放在最左边还是最右边，
         放在离他最远的地方不是最大的答案
+        所以要用区间dp
     */
     dp[1][n] = 0;
     for(int i = 1; i <= n; i++){
