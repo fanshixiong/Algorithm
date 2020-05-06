@@ -8,7 +8,7 @@ void solve(){
     int n, k; cin >> n >> k;
     for (int i = 0; i <= n; i++) p[i] = pos[i] = 0;
     for (int i = 0; i < n; i++)  cin >> a[i];
-    int l = n - 1;
+    int l = n - 2;
     for (int i = 1; i < n - 1; i++){
         if(a[i] > a[i-1] && a[i] > a[i+1]) pos[i] = 1;
     }
@@ -16,7 +16,7 @@ void solve(){
     //cout << endl;
     ll peak = 0, ans = -1, left = -1;
     for (; l >= 0; l--){
-        if(pos[l]) peak++;
+        if(pos[l + 1]) peak++;
         if(l + k - 1 < n && pos[l + k - 1]) peak--;
 
         if(ans <= peak){
