@@ -5,27 +5,24 @@ using namespace std;
 const int maxn = 2e5 + 10;
 int a[maxn], vis[maxn];
 void solve(){
-    int n; cin >> n;
-    map<int, int> pos;
-    pos.clear();
-    for (int i = 1; i <= n; i++){
-        cin >> a[i];
-        vis[i] = 0;
-        pos[a[i]] = i;
+    int n, k; cin >> n >> k;
+    string s; cin >> s;
+    sort(s.begin(), s.end());
+    if(s[0] != s[k-1]){  //不一样直接输出最后一份，肯定最大
+        cout << s[k-1] << endl;
+        return;
     }
-    vis[n + 1] = 1;
-    bool flg = true;
-    for (int i = 1; i <= n; i++){
-        int p = pos[i];
-        vis[p] = 1;
-        //从 1 到 n，检查数字 i 是否合理
-        //数字 i 的右边一位要么是 i + 1 ，要么是被小于 i 的数字填过
-        if(i + 1 == a[p + 1] || vis[p + 1]) continue;
-        flg = false;
-        break;
+    string ans = "";
+    ans += s[0];
+    if(s[k] == s[n-1]){  //一样均分
+        int num = (n - k) / k;
+        if((n-k) % k) num++; //有余数+1
+        ans += s.substr(k, num);
     }
-    if (flg) cout << "YES" << endl;
-    else cout << "NO" << endl;
+    else{ //不一样分给第一组
+        ans += s.substr(k, n);
+    }
+    cout << ans << endl;
 }
 int main(){
     IOS; int t; cin >> t;
