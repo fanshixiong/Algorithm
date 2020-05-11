@@ -5,18 +5,18 @@ using namespace std;
 const int maxn = 2e5 + 10;
 void solve(){
     int n; cin >> n;
-    vector<int> ans;
-    int rd = 1, rem;
-    while(n){
-        rem = n % 10;
-        if(rem){
-            ans.push_back(rem * rd);
-        }
-        n /= 10;
-        rd *= 10;
+    vector<int> v;
+    for (int i = 0; i < 30; i++){
+        if((1 << i) > n) break;
+        n -= (1 << i);
+        v.push_back(1 << i);
     }
-    cout << ans.size() << endl;
-    for(auto x : ans) cout << x << " ";
+    if(n) v.push_back(n);
+    sort(v.begin(), v.end());
+    cout << v.size() - 1 << endl;
+    for (int i = 1; i < v.size(); i++){
+        cout << v[i] - v[i - 1] << " ";
+    }
     cout << endl;
 }
 int main(){
