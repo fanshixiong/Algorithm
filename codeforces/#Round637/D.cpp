@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
+//#define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 2010;
 int val[20] = {119, 18, 93, 91, 58, 107, 111, 82, 127, 123}, a[maxn], ans[maxn];
 int n, k, x;
@@ -18,9 +18,9 @@ void dfs(int step, int kk){
         return;
     }
     for (int i = 9; i >= 0; i--){
-        if((val[i] & a[step]) == a[step]){
+        if((val[i] & a[step]) == a[step]){ //保证1的数目只多不少
             ans[step] = i;
-            dfs(step + 1, kk - __builtin_popcount(val[i] ^ a[step]));
+            dfs(step + 1, kk - __builtin_popcount(val[i] ^ a[step]));//数一
         }
     }
 }
@@ -37,9 +37,9 @@ void solve(){
     cout << -1 << endl;
 }
 int main(){
-    IOS; int t = 1;
-    while(t--){
+    //IOS; int t = 1;
+    //while(t--){
         solve();
-    }
+    //}
     return 0;
 }
