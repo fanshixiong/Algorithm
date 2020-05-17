@@ -23,11 +23,14 @@ int main(){
 	//实现从文件读取代码段
 	cout << "read something from data.txt" << endl;
 	FILE *fp;
-	if((fp = freopen("data.txt","r",stdin)) == NULL){
+	ifstream infile;
+	infile.open("data.txt");
+	if(!infile){
         printf("Not found file!\n");
         return 0;
     } else {
-        while ((scanf("%[^#]s", &input)) != EOF){
+		while (infile){
+			infile >> input;
 			cout << input << endl;
 			p_input = 0;
             printf("your words:\n%s\n", input);
@@ -39,8 +42,8 @@ int main(){
                     }
                     over = oneword -> typenum;
                 }
-                scanf("%[^#]s", input);
-            }
+				infile >> input;
+			}
         }
     return 0;
 }
