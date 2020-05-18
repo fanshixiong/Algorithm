@@ -158,6 +158,20 @@ void analyse(string fpin){
 							else cout << "[" << arr << "\t$无法识别字符"<< "]" << endl;
 						}
 						break;
+				case'"':
+				   		{
+				   			while(*ch != NULL){	
+								arr = arr + (*ch); 
+								ch++; 
+							}
+							cout << "[" << arr << "\t$字符串" << "]" << endl;
+						}
+						break;
+				case'\'':
+				   		{
+							cout << "[" << arr << "\t$字符" << "]" << endl;
+						}
+						break;
 			   	default:
 				   		{
 					   		while(*ch != NULL) {	
