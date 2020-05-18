@@ -3,7 +3,9 @@
 #include<string> 
 using namespace std; 
 
-#define MAX 16           
+#define MAX 16
+bool flg = false;
+
 string key[MAX]={"begin", "end", "if", "then", "else", "while", "write", "do", "call", 
 				"const", "char", "until", "procedure", "repeat", "int"}; 
 
@@ -16,7 +18,7 @@ bool Iskey(string c){         //关键字判断
  
 bool IsLetter(char c) {        //判断是否为字母
 	if(((c <= 'z') && (c >= 'a')) || ((c <= 'Z') && (c >= 'A')) || (c == '#') || (c == '_')) return true;     
-	else  return false; 
+	else return false; 
 }  
 
 bool IsDigit(char c){          //判断是否为数字     
@@ -37,7 +39,11 @@ void analyse(string fpin){
 				ch++; 
 			}  
             if(Iskey(arr)) cout<< "[" << arr << "\t$关键字" << "]" << endl;     
-        	else   cout << "[" << arr << "\t$普通标识符" << "]" << endl;   
+        	else if(arr.length() == 1){  
+				if(flg) cout << "[" << arr << "\t$局部变量" << "]" << endl;
+				else cout << "[" << arr << "\t$全局变量" << "]" << endl;
+			}
+			else cout << "[" << arr << "\t$普通标识符" << "]" << endl;
 		}                     
 		else if(IsDigit(*ch)){                    
 			char *c = ch;
@@ -51,9 +57,43 @@ void analyse(string fpin){
 			switch(*ch){    
             	case'+': 
                	case'-': 
-               	case'*':               
+               	case'*':   
+				case'|':
+						if(*ch != NULL && *(ch + 1) == '|'){
+							while(*ch != NULL){	
+								arr = arr + (*ch); 
+								ch++; 
+							}
+							cout << "[" << arr << "\t$运算符" << "]" << endl;
+							break;
+						}            
 			   	case'=':  
+				   		if(*ch != NULL && *(ch + 1) == '='){
+							while(*ch != NULL){	
+								arr = arr + (*ch); 
+								ch++; 
+							}
+							cout << "[" << arr << "\t$运算符" << "]" << endl;
+							break;
+						}
+				case'&': 
+						if(*ch != NULL && *(ch + 1) == '&'){
+							while(*ch != NULL){	
+								arr = arr + (*ch); 
+								ch++; 
+							}
+							cout << "[" << arr << "\t$运算符" << "]" << endl;
+							break;
+						}
                	case'/': 
+				   		if(*ch != NULL && *(ch + 1) == '/'){
+							while(*ch != NULL){	
+								arr = arr + (*ch); 
+								ch++; 
+							}
+							cout << "[" << arr << "\t$普通标识符" << "]" << endl;
+							break;
+						}
 			   			cout << "["  << *ch << "\t$运算符" << "]" << endl;
 			   			ch++;
 						break; 
@@ -64,8 +104,16 @@ void analyse(string fpin){
                	case';': 
                	case'.': 
                	case',': 
-               	case'{':  
-               	case'}':
+				   		cout << "["  << *ch << "\t$界符" << "]" << endl;
+						ch++;
+						break;
+               	case'{':
+						flg = true;
+						cout << "["  << *ch << "\t$界符" << "]" << endl;
+						ch++;
+						break;
+				case'}':
+						flg = false;
 			   			cout << "["  << *ch << "\t$界符" << "]" << endl;
 						ch++;
 						break; 
@@ -127,7 +175,7 @@ int main() {
 	string a[10000];
 	int i = 0;
 	ifstream infile;
-	infile.open("test.txt");
+	infile.open("data.txt");
 	if(!infile){
 		cerr<<"open error!!"<<endl;
 		exit(1);
@@ -136,10 +184,11 @@ int main() {
 		infile >> a[i++];
 	}
 	infile.close();
-	cout<<"\n********************分析如下*********************"<<endl;
+	cout << "\n********************分析如下*********************" << endl;
 	for(int j = 0; j <= i; j++){
 		analyse(a[j]);
 	}
-	cout<<endl;     
+	cout << endl;
+	system("pause");
 	return 0;
 } 
