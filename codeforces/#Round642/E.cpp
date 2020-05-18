@@ -24,7 +24,7 @@ void solve(){
     int n, k; cin >> n >> k;
     cin >> s;
     for (int i = 1; i <= n; i++) pre[i] = pre[i-1] + (s[i-1] - '0');
-    memset(dp, 0x3f3f3f3f, sizeof dp);
+    for (int i = 1; i <= n; i++) dp[i][0] = dp[i][1] = 0x3f3f3f3f;
     dp[0][0] = dp[0][1] = 0;
     for (int i = 1; i <= n; i++){
         dp[i][0] = min(dp[i - 1][0], dp[i - 1][1]) + (s[i - 1] == '1');
