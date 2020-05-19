@@ -9,7 +9,7 @@ int n, a, r, m;
 int h[maxn];
 void solve(){
     cin >> n >> a >> r >> m;
-    m = min(m, a + r);  //去掉再加上的代价比
+    m = min(m, a + r);  //去掉再加上的代价比替换的代价小
     for (int i = 1; i <= n; i++) cin >> h[i];
     //枚举最低点
     auto f = [&](int x) {
