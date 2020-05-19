@@ -167,8 +167,12 @@ void analyse(string fpin){
 							cout << "[" << arr << "\t$字符串" << "]" << endl;
 						}
 						break;
-				case'\'':
+				case '\'':
 				   		{
+						    while(*ch != NULL){	
+						 		arr = arr + (*ch); 
+						 		ch++; 
+							}
 							cout << "[" << arr << "\t$字符" << "]" << endl;
 						}
 						break;
