@@ -5,7 +5,7 @@ https://www.cnblogs.com/stelayuri/p/12903245.html
 using namespace std;
 #define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
-const int maxn = 1e6;
+const int maxn = 1e6 + 5;
 int cnt[maxn];
 void solve(){
     //memset(cnt, 0, sizeof cnt);
