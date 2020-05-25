@@ -1,6 +1,4 @@
-#include<iostream> 
-#include<fstream>
-#include<string> 
+#include<bits/stdc++.h> 
 using namespace std; 
 
 #define MAX 16
@@ -188,13 +186,127 @@ void analyse(string fpin){
 			} 				  
 	} 
 }  
-		
+
+struct globalTableNode{
+	bool var;     //函数是0，变量是1
+	int id;       //变量/函数id
+	string name;  //变量名/函数名
+	string type;  //变量/函数类型
+	vector<int> toLocalId;  //对应的局部函数地址
+};
+struct localTableNode{
+	string funcName;  //函数名称
+	int id; //局部变量id
+	string name; //局部变量名
+	string type; //局部变量类型
+};
+int cnt = 0;
+vector<globalTableNode> globalTable; //全局符号表
+vector<localTableNode> localTable;   //局部符号表
+map<string, int> globalMap;         //全局符号表名字到地址映射
+map<string, int> localMap;          //局部符号表名字到地址映射
+string varType[7] = {"int", "double", "float", "byte", "char", "long", "void"}; //变量类型
+
+vector<string> split(const string &str, const string &pattern){
+    vector<string> res;
+    if(str == "") return res;
+    //在字符串末尾也加入分隔符，方便截取最后一段
+    string strs = str + pattern;
+    size_t pos = strs.find(pattern);
+
+    while(pos != strs.npos){
+        string temp = strs.substr(0, pos);
+        res.push_back(temp);
+        //去掉已分割的字符串,在剩下的字符串中进行分割
+        strs = strs.substr(pos+1, strs.size());
+        pos = strs.find(pattern);
+    }
+
+    return res;
+}
+
+
+bool isVarType(string tar){
+	for (int i = 0; i < 7; i++){
+		if(tar == varType[i]) return true;
+	}
+	return false;
+}
+bool falg; //全局变量
+string func;
+
+void pushToGlobal(string src){
+	if(src == "}"){
+		falg = 0;
+		func = "";
+		return;
+	}
+	vector<string> tmp = split(src, " ");
+
+	int i = 0;
+  	for (; i < tmp.size(); i++){
+		if(isVarType(tmp[i])) break;
+	}
+	if(i >= tmp.size()) return;
+
+	if((i+1) < tmp.size() && isVarType(tmp[i+1])) i++;
+	i++;
+
+	globalTableNode gtn;
+	string type = tmp[i - 1];
+	if(tmp[i][tmp[i].size()-1] == '{' || tmp[i][tmp[i].size()-1] == ')' || (i+1 < tmp.size() && tmp[i+1] == "(")){
+		falg = 1;
+		gtn.var = 0;
+		string str = "";
+		for (int j = 0; j < tmp[i].size(); j++){
+			if(tmp[i][j] == '(') break;
+			str += tmp[i][j];
+		}
+		func = str;
+		gtn.name = str;
+		gtn.type = tmp[i-1];
+		gtn.id = ++cnt;
+		globalMap[str] = cnt;
+	}
+	globalTable.push_back(gtn);
+	
+	while(i < tmp.size() && (tmp[i][tmp[i].size()-1] == ';' || (i+1 < tmp.size() && tmp[i+1] == "=") || tmp[i][tmp[i].size()-1] == ',')){
+		globalTableNode gtn2;
+		localTableNode ltn;
+		if(!falg) gtn2.var = 1;
+		string str = "";
+		for (int j = 0; j < tmp[i].size(); j++){
+			if (tmp[i][j] == ';' || tmp[i][j] == '=' || tmp[i][j] == ',') break;
+			str += tmp[i][j];
+		}
+		if(!falg){
+			gtn2.name = str;
+			gtn2.type = type;
+			gtn2.id = ++cnt;
+			globalMap[str] = cnt;
+			globalTable.push_back(gtn2);
+		}else{
+			ltn.name = func;
+			ltn.name = str;
+			ltn.type = type;
+			ltn.id = ++cnt;
+			localMap[str] = cnt;
+			globalTable[globalMap[func]].toLocalId.push_back(cnt);
+			localTable.push_back(ltn);
+		}
+		i++;
+	}
+	//cout << gtn.name << " " << gtn.type << " " << gtn.var << endl;
+	
+}
+
 int main() {
 	string a[10000];
 	int i = 0;
 	ifstream infile;
-	infile.open("data.txt");
-	if(!infile){
+	infile.open("test.txt");
+	ifstream in("test.txt");
+	if(!infile || !in){
 		cerr<<"open error!!"<<endl;
 		exit(1);
 	}
@@ -202,9 +314,14 @@ int main() {
 		infile >> a[i++];
 	}
 	infile.close();
+	string src;
+	while(getline(in, src)){
+		pushToGlobal(src);
+	}
+	
 	cout << "\n********************分析如下*********************" << endl;
 	for(int j = 0; j <= i; j++){
-		analyse(a[j]);
+		//analyse(a[j]);
 	}
 	cout << endl;
 	system("pause");
