@@ -3,8 +3,8 @@ using namespace std;
 const int maxn = 2e5 + 10;
 void solve(){
     long long ans, fsa, es;
-    int n; cin >> n;{
-	}
+    int n;
+    cin >> n;
 }
 int main(){
     IOS; int t; cin >> t;

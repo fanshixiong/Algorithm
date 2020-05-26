@@ -53,10 +53,10 @@ void analyse(string fpin){
 		}         
 		else 
 			switch(*ch){    
-            	case'+': 
-               	case'-': 
-               	case'*':   
-				case'|':
+            	case '+': 
+               	case '-': 
+               	case '*':   
+				case '|':
 						if(*ch != NULL && *(ch + 1) == '|'){
 							while(*ch != NULL){	
 								arr = arr + (*ch); 
@@ -65,7 +65,7 @@ void analyse(string fpin){
 							cout << "[" << arr << "\t$运算符" << "]" << endl;
 							break;
 						}            
-			   	case'=':  
+			   	case '=':  
 				   		if(*ch != NULL && *(ch + 1) == '='){
 							while(*ch != NULL){	
 								arr = arr + (*ch); 
@@ -74,7 +74,7 @@ void analyse(string fpin){
 							cout << "[" << arr << "\t$运算符" << "]" << endl;
 							break;
 						}
-				case'&': 
+				case '&': 
 						if(*ch != NULL && *(ch + 1) == '&'){
 							while(*ch != NULL){	
 								arr = arr + (*ch); 
@@ -83,7 +83,7 @@ void analyse(string fpin){
 							cout << "[" << arr << "\t$运算符" << "]" << endl;
 							break;
 						}
-               	case'/': 
+               	case '/': 
 				   		if(*ch != NULL && *(ch + 1) == '/'){
 							while(*ch != NULL){	
 								arr = arr + (*ch); 
@@ -95,27 +95,27 @@ void analyse(string fpin){
 			   			cout << "["  << *ch << "\t$运算符" << "]" << endl;
 			   			ch++;
 						break; 
-               	case'(': 
-               	case')': 
-               	case'[':  
-               	case']':                
-               	case';': 
-               	case'.': 
-               	case',': 
+               	case '(': 
+               	case ')': 
+               	case '[':  
+               	case ']':                
+               	case ';': 
+               	case '.': 
+               	case ',': 
 				   		cout << "["  << *ch << "\t$界符" << "]" << endl;
 						ch++;
 						break;
-               	case'{':
+               	case '{':
 						flg = true;
 						cout << "["  << *ch << "\t$界符" << "]" << endl;
 						ch++;
 						break;
-				case'}':
+				case '}':
 						flg = false;
 			   			cout << "["  << *ch << "\t$界符" << "]" << endl;
 						ch++;
 						break; 
-               	case':':
+               	case ':':
 			   			{
 							if(*ch != NULL && *(ch + 1) == ':'){
 								while(*ch != NULL){	
@@ -133,7 +133,7 @@ void analyse(string fpin){
 				   			else cout << "[" << arr << "\t$无法识别字符" << "]" << endl;
 						}
 						break;
-			   	case'>':
+			   	case '>':
 				   		{
 				   			while(*ch != NULL){	
 							   arr = arr + (*ch); 
@@ -144,7 +144,7 @@ void analyse(string fpin){
 				   			else cout << "[" << arr << "\t$无法识别字符"<< "]" << endl;
 						}
 						break;
-               	case'<':
+               	case '<':
 				   		{
 				   			while(*ch != NULL){	
 								arr = arr + (*ch); 
@@ -156,7 +156,7 @@ void analyse(string fpin){
 							else cout << "[" << arr << "\t$无法识别字符"<< "]" << endl;
 						}
 						break;
-				case'"':
+				case '"':
 				   		{
 				   			while(*ch != NULL){	
 								arr = arr + (*ch); 
@@ -251,10 +251,11 @@ void pushToGlobal(string src){
 
 	if((i+1) < tmp.size() && isVarType(tmp[i+1])) i++;
 	i++;
-
-	globalTableNode gtn;
+	cout << tmp[i] << " ";
 	string type = tmp[i - 1];
-	if(tmp[i][tmp[i].size()-1] == '{' || tmp[i][tmp[i].size()-1] == ')' || (i+1 < tmp.size() && tmp[i+1] == "(")){
+	if(!falg && (tmp[i][tmp[i].size()-1] == '{' || tmp[i][tmp[i].size()-1] == ')' || (i+1 < tmp.size() && tmp[i+1] == "("))){
+		cout << tmp[i] << endl;
+		globalTableNode gtn;
 		falg = 1;
 		gtn.var = 0;
 		string str = "";
@@ -265,39 +266,54 @@ void pushToGlobal(string src){
 		func = str;
 		gtn.name = str;
 		gtn.type = tmp[i-1];
-		gtn.id = ++cnt;
-		globalMap[str] = cnt;
-	}
-	globalTable.push_back(gtn);
+		gtn.id = cnt;
+		globalMap[str] = cnt++;
+		globalTable.push_back(gtn);
+	} 
 	
 	while(i < tmp.size() && (tmp[i][tmp[i].size()-1] == ';' || (i+1 < tmp.size() && tmp[i+1] == "=") || tmp[i][tmp[i].size()-1] == ',')){
-		globalTableNode gtn2;
+		cout << tmp[i] << endl;
+		globalTableNode gtn;
 		localTableNode ltn;
-		if(!falg) gtn2.var = 1;
+		if(!falg) gtn.var = 1;
 		string str = "";
 		for (int j = 0; j < tmp[i].size(); j++){
 			if (tmp[i][j] == ';' || tmp[i][j] == '=' || tmp[i][j] == ',') break;
 			str += tmp[i][j];
 		}
 		if(!falg){
-			gtn2.name = str;
-			gtn2.type = type;
-			gtn2.id = ++cnt;
-			globalMap[str] = cnt;
-			globalTable.push_back(gtn2);
+			gtn.name = str;
+			gtn.type = type;
+			gtn.id = cnt;
+			globalMap[str] = cnt++;
+			globalTable.push_back(gtn);
 		}else{
-			ltn.name = func;
+			ltn.funcName = func;
 			ltn.name = str;
 			ltn.type = type;
-			ltn.id = ++cnt;
+			ltn.id = cnt;
 			localMap[str] = cnt;
 			globalTable[globalMap[func]].toLocalId.push_back(cnt);
+			cnt++;
 			localTable.push_back(ltn);
 		}
 		i++;
 	}
 	//cout << gtn.name << " " << gtn.type << " " << gtn.var << endl;
-	
+}
+
+void print(){
+	cout << "全局符号表：" << endl;
+	cout << "函数/变量名\t类型\t变量/函数类型" << endl;
+	for(auto v : globalTable){
+		cout << v.name << "\t\t" << (v.var ? ("变量") : ("函数")) << "\t" << v.type << endl;
+	}
+	cout << "局部符号表：" << endl;
+	cout << "函数名\t变量名\t变量类型" << endl;
+	for(auto v : localTable){
+		cout << v.funcName << "\t" << v.name << "\t" << v.type << "\t" << endl;
+	}
+	cout << endl;
 }
 
 int main() {
@@ -318,12 +334,13 @@ int main() {
 	while(getline(in, src)){
 		pushToGlobal(src);
 	}
-	
+	print();
+
 	cout << "\n********************分析如下*********************" << endl;
 	for(int j = 0; j <= i; j++){
 		//analyse(a[j]);
 	}
 	cout << endl;
-	system("pause");
+	//system("pause");
 	return 0;
 } 
