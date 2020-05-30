@@ -200,12 +200,13 @@ struct localTableNode{
 	string name; //局部变量名
 	string type; //局部变量类型
 };
-int cnt = 0;
+int global_cnt = 0, local_cnt = 0;
 vector<globalTableNode> globalTable; //全局符号表
 vector<localTableNode> localTable;   //局部符号表
 map<string, int> globalMap;         //全局符号表名字到地址映射
 map<string, int> localMap;          //局部符号表名字到地址映射
 string varType[7] = {"int", "double", "float", "byte", "char", "long", "void"}; //变量类型
+
 
 vector<string> split(const string &str, const string &pattern){
     vector<string> res;
@@ -251,10 +252,10 @@ void pushToGlobal(string src){
 
 	if((i+1) < tmp.size() && isVarType(tmp[i+1])) i++;
 	i++;
-	cout << tmp[i] << " ";
+	//cout << tmp[i] << " ";
 	string type = tmp[i - 1];
 	if(!falg && (tmp[i][tmp[i].size()-1] == '{' || tmp[i][tmp[i].size()-1] == ')' || (i+1 < tmp.size() && tmp[i+1] == "("))){
-		cout << tmp[i] << endl;
+		//cout << tmp[i] << endl;
 		globalTableNode gtn;
 		falg = 1;
 		gtn.var = 0;
@@ -266,13 +267,13 @@ void pushToGlobal(string src){
 		func = str;
 		gtn.name = str;
 		gtn.type = tmp[i-1];
-		gtn.id = cnt;
-		globalMap[str] = cnt++;
+		gtn.id = global_cnt;
+		globalMap[str] = global_cnt++;
 		globalTable.push_back(gtn);
 	} 
 	
 	while(i < tmp.size() && (tmp[i][tmp[i].size()-1] == ';' || (i+1 < tmp.size() && tmp[i+1] == "=") || tmp[i][tmp[i].size()-1] == ',')){
-		cout << tmp[i] << endl;
+		//cout << tmp[i] << endl;
 		globalTableNode gtn;
 		localTableNode ltn;
 		if(!falg) gtn.var = 1;
@@ -284,17 +285,17 @@ void pushToGlobal(string src){
 		if(!falg){
 			gtn.name = str;
 			gtn.type = type;
-			gtn.id = cnt;
-			globalMap[str] = cnt++;
+			gtn.id = global_cnt;
+			globalMap[str] = global_cnt++;
 			globalTable.push_back(gtn);
 		}else{
 			ltn.funcName = func;
 			ltn.name = str;
 			ltn.type = type;
-			ltn.id = cnt;
-			localMap[str] = cnt;
-			globalTable[globalMap[func]].toLocalId.push_back(cnt);
-			cnt++;
+			ltn.id = local_cnt;
+			localMap[str] = local_cnt;
+			globalTable[globalMap[func]].toLocalId.push_back(local_cnt);
+			local_cnt++;
 			localTable.push_back(ltn);
 		}
 		i++;
@@ -309,9 +310,9 @@ void print(){
 		cout << v.name << "\t\t" << (v.var ? ("变量") : ("函数")) << "\t" << v.type << endl;
 	}
 	cout << "局部符号表：" << endl;
-	cout << "函数名\t变量名\t变量类型" << endl;
+	cout << "所属函数名\t变量名\t变量类型" << endl;
 	for(auto v : localTable){
-		cout << v.funcName << "\t" << v.name << "\t" << v.type << "\t" << endl;
+		cout << v.funcName << "\t\t" << v.name << "\t" << v.type << "\t" << endl;
 	}
 	cout << endl;
 }
