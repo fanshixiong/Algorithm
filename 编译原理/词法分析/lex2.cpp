@@ -1,3 +1,9 @@
+/**
+ * @author: Frans
+ * @Time: 2020/5/12
+*/
+
+
 #include<bits/stdc++.h> 
 using namespace std; 
 
@@ -310,7 +316,7 @@ void print(){
 		cout << v.name << "\t\t" << (v.var ? ("变量") : ("函数")) << "\t" << v.type << endl;
 	}
 	cout << "局部符号表：" << endl;
-	cout << "所属函数名\t变量名\t变量类型" << endl;
+	cout << "所属函数\t变量名\t变量类型" << endl;
 	for(auto v : localTable){
 		cout << v.funcName << "\t\t" << v.name << "\t" << v.type << "\t" << endl;
 	}
