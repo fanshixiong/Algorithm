@@ -1,314 +1,433 @@
 #include <bits/stdc++.h>
-
-#define _KEY_WORDEND "waiting for your expanding"
 using namespace std;
-typedef struct{ //词的结构，二元组形式（单词种别，单词自身的值）
-	int typenum; //单词种别
-	char * word;
-}WORD;
-char input[255];
-char token[255] = "";
-int p_input; //指针
-int p_token;
-char ch;
-char * rwtab[] = { "begin","if","then","while","do","end","int","main",
-                        "else","float","double","return","cout",_KEY_WORDEND };
- 
-WORD * scanner();//扫描
- 
-int main(){
-	int over = 1;
-	WORD* oneword = new WORD;
- 
-	//实现从文件读取代码段
-	cout << "read something from data.txt" << endl;
-	FILE *fp;
-	ifstream infile;
-	infile.open("data.txt");
-	if(!infile){
-        printf("Not found file!\n");
-        return 0;
-    } else {
-		while (infile){
-			infile >> input;
-			cout << input << endl;
-			p_input = 0;
-            printf("your words:\n%s\n", input);
-            while (over < 1000 && over != -1){
-            	oneword = scanner();
-                if (oneword -> typenum < 1000){
-                    if(oneword -> typenum != 999)
-                         cout << "[  "<< oneword -> typenum <<"\t"<< oneword -> word <<"  ]"<< endl;
-                    }
-                    over = oneword -> typenum;
-                }
-				infile >> input;
-			}
-        }
-    return 0;
-}
- 
-//从输入缓冲区读取一个字符到ch中
-char m_getch(){
-	ch = input[p_input];
-	p_input++;
-	return ch;
-}
- 
-//去掉空白符号
-void getbc(){
-	while (ch == ' ' || ch == 10){
-		ch = input[p_input];
-		p_input++;
+#define MAX 32
+int temp = 0;
+/*
+	保留字|关键字：1
+	操作符|运算符：2
+	界限符：3
+	标识符：4
+	常数：5
+	无识别：6
+*/
+char ch = ' ';
+char* keyWord[32] = { (char*)"auto",(char*)"short",(char*)"int",(char*)"long",(char*)"float",
+					(char*)"double",(char*)"char",(char*)"struct",(char*)"union",(char*)"enum",
+					(char*)"typedef",(char*)"const",(char*)"unsigned",(char*)"signed",
+					(char*)"extern",(char*)"register",(char*)"static",(char*)"volatile",
+					(char*)"void",(char*)"if",(char*)"else",(char*)"switch",(char*)"case",
+					(char*)"for",(char*)"do",(char*)"while",(char*)"goto",(char*)"continue",
+					(char*)"break",(char*)"default",(char*)"sizeof",(char*)"return" };
+char token[20];//定义获取的字符
+//判断是否是关键字
+bool isKey(char* token)
+{
+	for (int i = 0; i < MAX; i++)
+	{
+		if (strcmp(token, keyWord[i]) == 0)
+			return true;
 	}
+	return false;
 }
- 
-//拼接单词
-void concat(){
-	token[p_token] = ch;
-	p_token++;
-	token[p_token] = '\0';
-}
- 
-//判断是否字母
-int letter(){
-	if (ch >= 'a'&&ch <= 'z' || ch >= 'A'&&ch <= 'Z')
-		return 1;
+//判断是否是字母
+bool isLetter(char letter)
+{
+	if ((letter >= 'a' && letter <= 'z') || (letter >= 'A' && letter <= 'Z'))
+		return true;
 	else
-		return 0;
+		return false;
 }
- 
-//判断是否数字
-int digit(){
-	if (ch >= '0'&&ch <= '9')
-		return 1;
+//判断是否是数字
+bool isDigit(char digit)
+{
+	if (digit >= '0' && digit <= '9')
+		return true;
 	else
-		return 0;
+		return false;
 }
- 
-//检索关键字表格
-int reserve(){
-	int i = 0;
-	while(strcmp(rwtab[i], _KEY_WORDEND)){
-		if (!strcmp(rwtab[i], token))
-			return i + 1;
-		i++;
-	}
-	return 10;//如果不是关键字，则返回种别码10
-}
- 
-//回退一个字符
-void retract(){
-	p_input--;
-}
- 
-//词法扫描程序
-WORD * scanner(){
-	WORD * myword = new WORD;
-	myword -> typenum = 10;  //初始值
-	myword -> word = "";
-	p_token = 0;   //单词缓冲区指针
-	m_getch();
-	getbc();//去掉空白
- 
-	if (letter()){//判断读取到的首字母是字母
-	        //如int
-		while (letter() || digit()){
-			concat(); //连接
-			m_getch();
-		}
-		retract(); //回退一个字符
-		myword -> typenum = reserve();//判断是否为关键字，返回种别码
-		myword -> word = token;
-		return myword;
-	}
-	else if (digit()){  //判断读取到的单词首字符是数字
-		while (digit()){ //所有数字连接起来
-			concat();
-			m_getch();
-		}
-		retract();
-		//数字单词种别码统一为20，单词自身的值为数字本身
-		myword -> typenum = 20;
-		myword -> word = token;
-		return(myword);
-	}
-	else switch (ch) {
-		case '=':
-			m_getch();//首字符为=,再读取下一个字符判断
-			if (ch == '=') {
-				myword -> typenum = 39;
-				myword -> word = "==";
-				return(myword);
-			}
-			retract();//读取到的下个字符不是=，则要回退，直接输出=
-			myword -> typenum = 21;
-			myword -> word = "=";
-			return(myword);
-			break;
-		case '+':
-			myword -> typenum = 22;
-			myword -> word = "+";
-			return(myword);
-			break;
-		case '-':
-			myword -> typenum = 23;
-			myword -> word = "-";
-			return(myword);
-			break;
-        case '/'://读取到该符号之后，要判断下一个字符是什么符号，判断是否为注释
-            m_getch();//首字符为/,再读取下一个字符判断
-			if (ch == '*'){ // 说明读取到的是注释
-				m_getch();
+//词法分析
+void analyze(FILE* fpin)
+{
 
-				while(ch != '*') {
-					m_getch();//注释没结束之前一直读取注释，但不输出
-					if(ch == '*') {
-						m_getch();
-						if(ch == '/'){//注释结束
-							myword->typenum = 999;
-							myword->word = "注释";
-							return (myword);
-							break;
-						}
-					}
-	
-				}
- 			} else {
-                retract();//读取到的下个字符不是*，即不是注释，则要回退，直接输出/
- 
-                myword->typenum = 25;
-                myword->word = "/";
-                return (myword);
-                break;
-            }
-        case '*':
-			myword->typenum = 24;
-			myword->word = "*";
-			return(myword);
-			break;
-		case '(':
-			myword->typenum = 26;
-			myword->word = "(";
-			return(myword);
-			break;
-		case ')':
-			myword->typenum = 27;
-			myword->word = ")";
-			return(myword);
-			break;
-		case '[':
-			myword->typenum = 28;
-			myword->word = "[";
-			return(myword);
-			break;
-		case ']':
-			myword->typenum = 29;
-			myword->word = "]";
-			return(myword);
-			break;
-		case '{':
-			myword->typenum = 30;
-			myword->word = "{";
-			return(myword);
-			break;
-		case '}':
-			myword->typenum = 31;
-			myword->word = "}";
-			return(myword);
-			break;
-		case ',':
-			myword->typenum = 32;
-			myword->word = ",";
-			return(myword);
-			break;
-		case ':':
-			m_getch();
-			if (ch == '=') {
-				myword -> typenum = 18;
-				myword -> word = ":=";
-				return(myword);
-				break;
+	while ((ch = fgetc(fpin)) != EOF) {
+		if (ch == ' ' || ch == '\t' || ch == '\n') {}
+		else if (isLetter(ch)) {
+			char token[20] = { '\0' };
+			int i = 0;
+			while (isLetter(ch) || isDigit(ch)) {
+				token[i] = ch;
+				i++;
+				ch = fgetc(fpin);
+			}
+			//回退一个指针
+			fseek(fpin, -1L, SEEK_CUR);
+			if (isKey(token)) {
+				//关键字
+				cout << token << "\t1" << "\t关键字" << endl;
 			}
 			else {
-				retract();
-				myword -> typenum = 33;
-				myword -> word = ":";
-				return(myword);
-				break;
+				//标识符
+				cout << token << "\t4" << "\t标识符" << endl;
 			}
-		case ';':
-			myword -> typenum = 34;
-			myword -> word = ";";
-			return(myword);
-			break;
-		case '>':
-			m_getch();
-			if (ch == '='){
-				myword->typenum = 37;
-				myword->word = ">=";
-				return(myword);
-				break;
+		}
+		else if (isDigit(ch) || (ch == '.'))
+		{
+			int i = 0;
+			char token[20] = { '\0' };
+			while (isDigit(ch) || (ch == '.' && isDigit(fgetc(fpin))))
+			{
+				if (ch == '.')
+					fseek(fpin, -1L, SEEK_CUR);
+				token[i] = ch;
+				i++;
+				ch = fgetc(fpin);
 			}
-			retract();
-			myword->typenum = 35;
-			myword->word = ">";
-			return(myword);
-			break;
-		case '<':
-			m_getch();
-			if (ch == '='){
-				myword->typenum = 38;
-				myword->word = "<=";
-				return(myword);
-				break;
+			fseek(fpin, -1L, SEEK_CUR);
+			//属于无符号常数
+			if(temp == 0)
+				cout << token << "\t5" << "\t常数(全局)" << endl;
+			else
+				cout << token << "\t5" << "\t常数(局部)" << endl;
+		}
+		else switch (ch) {
+			case '+': {
+				ch = fgetc(fpin);
+				if (ch == '+')
+					cout << "++" << "\t2" << "\t运算符" << endl;
+				else {
+					cout << "+" << "\t2" << "\t运算符" << endl;
+					fseek(fpin, -1L, SEEK_CUR);
+				}
 			}
-			else if(ch == '<'){
-				myword->typenum = 42;
-				myword->word = "<<";
-				return(myword);
-				break;
+			break;
+			case '-': {
+				ch = fgetc(fpin);
+				if (ch == '-')
+					cout << "--" << "\t2" << "\t运算符" << endl;
+				else {
+					cout << "-" << "\t2" << "\t运算符" << endl;
+					fseek(fpin, -1L, SEEK_CUR);
+				}
 			}
-			else{
-				retract();
-				myword->typenum = 36;
-				myword->word = "<";
-				return (myword);
+			break;
+			case '*': {
+				ch = fgetc(fpin);
+				if (ch == '/')
+					cout << "*/" << "\t2" << "\t界限符" << endl;
+				else {
+					cout << "*" << "\t2" << "\t运算符" << endl;
+					fseek(fpin, -1L, SEEK_CUR);
+				}
 			}
-		case '!':
-			m_getch();
-			if (ch == '='){
-				myword->typenum = 40;
-				myword->word = "!=";
-				return(myword);
-				break;
+			break;
+			case '/': {
+				ch = fgetc(fpin);
+				if (ch == '*') {
+					cout << "*/" << "\t2" << "\t界限符" << endl;
+					ch = fgetc(fpin);
+					string arr = "";
+					string s = "";
+					while (s != "*/") {
+						if (ch == '*') {
+							ch = fgetc(fpin);
+							if (ch == '/') {
+								s = "*/";
+								break;
+							}
+						else 
+							fseek(fpin, -1L, SEEK_CUR);
+						}
+					arr = arr + ch;
+					ch = fgetc(fpin);
+					}
+					cout << arr << "\t6" << "\t注释内容" << endl;
+					cout << s << "\t2" << "\t界限符" << endl;
+				}
+				else if(ch == '/') 
+					cout << "//" << "\t2" << "\t界限符" << endl;
+				else {
+					cout << "/" << "\t2" << "\t运算符" << endl;
+					fseek(fpin, -1L, SEEK_CUR);
+				}
 			}
-			retract();
-			myword->typenum = -1;
-			myword->word = "ERROR";
-			return(myword);
 			break;
-		case ' " ':
-			myword->typenum = 41;
-			myword->word = " \" ";
-			return(myword);
+			case '(':cout << ch << "\t3" << "\t界限符" << endl; break;
+			case ')':cout << ch << "\t3" << "\t界限符" << endl; break;
+			case '[':cout << ch << "\t3" << "\t界限符" << endl; break;
+			case ']':cout << ch << "\t3" << "\t界限符" << endl; break;
+			case ';':cout << ch << "\t3" << "\t界限符" << endl; break;
+			case '{': {
+				temp++;
+				cout << ch << "\t3" << "\t界限符" << endl; break; 
+			}
+			case '}': {
+				temp--;
+				cout << ch << "\t3" << "\t界限符" << endl; break;
+			}
+			case ',':cout << ch << "\t3" << "\t界限符" << endl; break;
+			case '"': {
+				cout << ch << "\t3" << "\t界限符" << endl;
+				ch = fgetc(fpin);
+				string arr = "";
+				while(ch != '"') {
+					arr = arr + ch;
+					ch = fgetc(fpin);
+				}
+				cout << arr << "\t6" << "\t无法识别字符" << endl;
+				cout << ch << "\t3" << "\t界限符" << endl;
+			}
 			break;
-		case '\0':
-			myword->typenum = 1000;
-			myword->word = "OVER";
-			return(myword);
+			case '\'':cout << ch << "\t3" << "\t界限符" << endl; break;//判断单引号
+			case '=': {
+				ch = fgetc(fpin);
+				if (ch == '=')
+					cout << "==" << "\t2" << "\t运算符" << endl;
+				else {
+					cout << "=" << "\t2" << "\t运算符" << endl;
+					fseek(fpin, -1L, SEEK_CUR);
+				}
+			}
 			break;
-		case '#':
-			myword->typenum = 0;
-			myword->word = "#";
-			return (myword);
+			case ':': {
+				ch = fgetc(fpin);
+				if (ch == '=')
+					cout << ":=" << "\t2" << "\t运算符" << endl;
+				else {
+					cout << ":" << "\t2" << "\t运算符" << endl;
+					fseek(fpin, -1L, SEEK_CUR);
+				}
+			}
 			break;
-		default:
-			myword->typenum = -1;
-			myword->word = "ERROR";
-			return(myword);
+			case '>': {
+				ch = fgetc(fpin);
+				if (ch == '=')
+					cout << ">=" << "\t2" << "\t运算符" << endl;
+				else {
+					cout << ">" << "\t2" << "\t运算符" << endl;
+					fseek(fpin, -1L, SEEK_CUR);
+				}
+			}
 			break;
+			case '<': {
+				ch = fgetc(fpin);
+				string arr = "<";
+				while (ch != ' ' && ch != '\t' && ch != '\n') {
+					arr = arr + ch;
+					ch = fgetc(fpin);
+				}
+				if (arr == "<=" || arr == "<") 
+					cout << arr << "\t2" << "\t运算符" << endl;
+				else if (arr == "<<") 
+					cout << arr << "\t3" << "\t界限符" << endl;
+				else if (arr[arr.length() - 1] == '>') 
+					cout << arr << "\t4" << "\t头文件" << endl;
+				else 
+					cout << arr << "\t6" << "\t无法识别字符" << endl;		
+			}
+			break;
+			//无识别
+			default: cout << ch << "\t6" << "\t无识别符" << endl;
+		}
 	}
 }
+struct globalTableNode {	
+	string id;       //变量id
+	string name;  //变量名
+	string type;  //变量类型
+};
+struct localTableNode {
+	string id; //局部变量id
+	string name; //局部变量名
+	string type; //局部变量类型
+};
+
+vector<string> all;	//存储每一行
+vector<globalTableNode> globalTable; //全局符号表
+vector<localTableNode> localTable;   //局部符号表
+vector<string> globalVar;	//存储全局一行
+vector<string> localVar;	//存储局部
+int global = 0;
+string varType[9] = {"int", "double", "float", "byte", "char", "long", "void" , "#define", "string"}; //变量类型
+//判断是否是数字
+bool AllisNum(string str)
+{
+	stringstream sin(str);
+	double d;
+	char c;
+	if (!(sin >> d))
+	{
+		return false;
+	}
+	if (sin >> c)
+	{
+		return false;
+	}
+	return true;
+}
+//判断选出的string中是否含有常数
+bool isNum(string a) {
+	string s = "";	
+	for (int i = 0; i < a.size(); i++) {
+		if (a[i] != ' ' && a[i] != '\n' && a[i] != '\t' && a[i] != ';' && a[i] != '[' && a[i] != ']' && a[i] != ',')
+			s = s + a[i];
+		else {
+			if (AllisNum(s)) {
+				return true;
+			}
+			s = "";
+		}
+	}
+	return false;
+}
+//判读是否是有变量定义且含有常数
+bool isVar(string a) {
+	for (int i = 0; i < 9; i++) {
+		string::size_type idx;
+		idx = a.find(varType[i]);
+		if (idx != string::npos) {
+			if (isNum(a)) {
+				return true;
+			}
+		}	
+	}
+	return false;
+}
+//判读是否是是变量类型
+bool IsVar(string a) {
+	for (int i = 0; i < 9; i++) {
+		string::size_type idx;
+		idx = a.find(varType[i]);
+		if (idx != string::npos)
+			return true;		
+	}
+	return false;
+}
+//判断全局还是局部
+bool isInFun(string a) {
+	string::size_type idx;
+	idx = a.find("{");
+	if (idx != string::npos)
+		return true;
+	else
+		return false;
+}
+bool isOutFun(string a) {
+	string::size_type idx;
+	idx = a.find("}");
+	if (idx != string::npos)
+		return true;
+	else
+		return false;
+}
+//选出符合条件的
+void Var(string a) {
+	if (isVar(a)) {
+		if (global == 0)
+			globalVar.push_back(a);
+		else
+			localVar.push_back(a);
+	}
+	if (isInFun(a))
+		global++;
+	if (isOutFun(a))
+		global--;
+}
+void result() {
+	for (int i = 0; i < all.size(); i++) {
+		Var(all[i]);
+	}
+	for (int i = 0; i < globalVar.size(); i++) {
+		int flag = 0;
+		string ss = globalVar[i];
+		string s = "";
+		globalTableNode gl;
+		for (int j = 0; j < ss.size(); j++) {
+			if (ss[j] != ' ' && ss[j] != '\n' && ss[j] != '\t' && ss[j] != '=' && ss[j] != ';' && ss[j] != '[' && ss[j] != ']' && ss[j] != '(' && ss[j] != ')')
+				s = s + ss[j];
+			else if(s != ""){
+				if (IsVar(s)) {
+					gl.type = s;
+					flag = 1;
+				}
+				if (flag == 1) {
+					if (AllisNum(s)) {
+						gl.id = s;
+						break;
+					}
+					else
+						gl.name = s;
+				}
+				s = "";
+			}
+		}
+		if (flag == 1)
+			globalTable.push_back(gl);
+	}
 	
-	
+	for (int i = 0; i < localVar.size(); i++) {
+		int flag = 0;
+		string ss = localVar[i];
+		string s = "";
+		localTableNode lt;
+		for (int j = 0; j < ss.size(); j++) {
+			if (ss[j] != ' ' && ss[j] != '\n' && ss[j] != '\t' && ss[j] != '=' && ss[j] != ';' && ss[j] != '[' && ss[j] != ']' && ss[j] != '(' && ss[j] != ')')
+				s = s + ss[j];
+			else if(s != ""){
+				if (IsVar(s)) {
+					lt.type = s;
+					flag = 1;
+				}
+				if (flag == 1) {
+					if (AllisNum(s)) {
+						lt.id = s;
+						break;
+					}
+					else
+						lt.name = s;
+				}
+				s = "";
+			}
+		}
+		if (flag == 1)
+			localTable.push_back(lt);
+	}
+	cout << "全局变量：" << endl;
+	cout << "变量名\t" << "\t变量值\t" << "\t变量类型" << endl;
+	for (int i = 0; i < globalTable.size(); i++)
+		cout << globalTable[i].name << "\t\t" << globalTable[i].id << "\t\t" << globalTable[i].type << endl;
+	cout << "局部变量：" << endl;
+	cout << "变量名\t" << "\t变量值\t" << "\t变量类型" << endl;
+	for (int i = 0; i < localTable.size(); i++)
+		cout << localTable[i].name << "\t\t" << localTable[i].id << "\t\t" << localTable[i].type << endl;
+}
+int main() {
+	char input[30];
+	FILE* fpin;
+	cout << "请输入源文件名：" << endl;
+	cin >> input;
+	for (;;) {
+		if ((fpin = fopen(input, "r")) != NULL)
+			break;
+		else{
+			cout << "路径输入错误" << endl;
+			break;
+			}
+	}
+	cout << "****************词法分析结果********************" << endl;
+	analyze(fpin);
+	if(fpin != 0)
+		fclose(fpin);
+	fstream f(input);
+	if (!f) {
+		cout << "路径输入错误" << endl;
+	}
+	string line;
+	cout << "****************符号表********************" << endl;
+	while (getline(f, line))
+	{
+		line = line + "\n";
+		all.push_back(line);
+	}
+	result();
+	return 0;
+}

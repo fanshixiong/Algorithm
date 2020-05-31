@@ -193,6 +193,7 @@ void analyse(string fpin){
 	} 
 }  
 
+//全局符号表
 struct globalTableNode{
 	bool var;     //函数是0，变量是1
 	int id;       //变量/函数id
@@ -200,20 +201,32 @@ struct globalTableNode{
 	string type;  //变量/函数类型
 	vector<int> toLocalId;  //对应的局部函数地址
 };
+
+//局部符号表
 struct localTableNode{
 	string funcName;  //函数名称
 	int id; //局部变量id
 	string name; //局部变量名
 	string type; //局部变量类型
 };
+/**
+ * 全局符号表和局部符号表的hash值
+ * cnt对应唯一的hash值，可以保证每一个变量/函数名称对应唯一的cnt
+ * */
 int global_cnt = 0, local_cnt = 0;
+
 vector<globalTableNode> globalTable; //全局符号表
 vector<localTableNode> localTable;   //局部符号表
+
+//暂时没用
 map<string, int> globalMap;         //全局符号表名字到地址映射
 map<string, int> localMap;          //局部符号表名字到地址映射
+
 string varType[7] = {"int", "double", "float", "byte", "char", "long", "void"}; //变量类型
 
-
+/**
+ * 按照模式串分割字符串
+ * */
 vector<string> split(const string &str, const string &pattern){
     vector<string> res;
     if(str == "") return res;
@@ -233,33 +246,47 @@ vector<string> split(const string &str, const string &pattern){
 }
 
 
+/**
+ * 判断是否是变量或者函数
+ * */
 bool isVarType(string tar){
 	for (int i = 0; i < 7; i++){
 		if(tar == varType[i]) return true;
 	}
 	return false;
 }
+
+/**
+ * 用一个标志位flag 遇见“{”为真 遇见”}“为假，为假时候的变量是全局的
+ * 因为是从上往下扫描 所以为真时候的最近的函数名就是这个变量的所属的函数
+ * 只用一个字符串func存储函数名 用一个flag标志位 就行了
+ * */
 bool falg; //全局变量
 string func;
 
+/**
+ * 压栈操作，函数名取得不好
+ * */
 void pushToGlobal(string src){
 	if(src == "}"){
 		falg = 0;
 		func = "";
 		return;
 	}
-	vector<string> tmp = split(src, " ");
+	vector<string> tmp = split(src, " "); //按照空格分割字符串
 
 	int i = 0;
   	for (; i < tmp.size(); i++){
-		if(isVarType(tmp[i])) break;
+		if(isVarType(tmp[i])) break; //判断是否是变量或者函数类型
 	}
-	if(i >= tmp.size()) return;
+	if(i >= tmp.size()) return;  //不是 返回
 
-	if((i+1) < tmp.size() && isVarType(tmp[i+1])) i++;
-	i++;
+	if((i+1) < tmp.size() && isVarType(tmp[i+1])) i++;  //如long long 等类型的判断
+	i++;//跳到变量/函数名位置
 	//cout << tmp[i] << " ";
 	string type = tmp[i - 1];
+
+	// 判断是函数
 	if(!falg && (tmp[i][tmp[i].size()-1] == '{' || tmp[i][tmp[i].size()-1] == ')' || (i+1 < tmp.size() && tmp[i+1] == "("))){
 		//cout << tmp[i] << endl;
 		globalTableNode gtn;
@@ -270,14 +297,17 @@ void pushToGlobal(string src){
 			if(tmp[i][j] == '(') break;
 			str += tmp[i][j];
 		}
-		func = str;
+		func = str;  //相邻最近的函数名称
+
+		//存入表
 		gtn.name = str;
 		gtn.type = tmp[i-1];
 		gtn.id = global_cnt;
 		globalMap[str] = global_cnt++;
 		globalTable.push_back(gtn);
 	} 
-	
+
+	//判断是变量，变量可以有很多个
 	while(i < tmp.size() && (tmp[i][tmp[i].size()-1] == ';' || (i+1 < tmp.size() && tmp[i+1] == "=") || tmp[i][tmp[i].size()-1] == ',')){
 		//cout << tmp[i] << endl;
 		globalTableNode gtn;
@@ -288,18 +318,21 @@ void pushToGlobal(string src){
 			if (tmp[i][j] == ';' || tmp[i][j] == '=' || tmp[i][j] == ',') break;
 			str += tmp[i][j];
 		}
-		if(!falg){
+		if(!falg){ //全局变量
 			gtn.name = str;
 			gtn.type = type;
 			gtn.id = global_cnt;
 			globalMap[str] = global_cnt++;
 			globalTable.push_back(gtn);
-		}else{
-			ltn.funcName = func;
+		}else{  //局部变量
+			ltn.funcName = func;  //与这个局部变量相邻最近的函数名称
 			ltn.name = str;
 			ltn.type = type;
 			ltn.id = local_cnt;
 			localMap[str] = local_cnt;
+			/**
+			 * globalMap[func]对应名称为func的hash值，可以跳到全局符号表相应的位置
+			 * */
 			globalTable[globalMap[func]].toLocalId.push_back(local_cnt);
 			local_cnt++;
 			localTable.push_back(ltn);
@@ -309,6 +342,7 @@ void pushToGlobal(string src){
 	//cout << gtn.name << " " << gtn.type << " " << gtn.var << endl;
 }
 
+//输出
 void print(){
 	cout << "全局符号表：" << endl;
 	cout << "函数/变量名\t类型\t变量/函数类型" << endl;
