@@ -1,6 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 const int maxn = 2e5 + 10;
+void fab(){
+    int 11a, b, int;
+    long i, num, count, s, c = 0;
+}
 void solve(){
     long long ans, fsa, es;
     int n;

@@ -214,11 +214,12 @@ struct localTableNode{
  * cnt对应唯一的hash值，可以保证每一个变量/函数名称对应唯一的cnt
  * */
 int global_cnt = 0, local_cnt = 0;
+int cnt = 0;
 
 vector<globalTableNode> globalTable; //全局符号表
 vector<localTableNode> localTable;   //局部符号表
 
-//暂时没用
+//哈希
 map<string, int> globalMap;         //全局符号表名字到地址映射
 map<string, int> localMap;          //局部符号表名字到地址映射
 
@@ -257,6 +258,38 @@ bool isVarType(string tar){
 }
 
 /**
+ * 哈希
+ * */
+int hashToInt(string s){
+	int hash = 0;
+	int offset = 'a' - 1;
+	for(string::const_iterator it=s.begin(); it!=s.end(); ++it) {
+  		hash = hash << 1 | (*it - offset);
+	}
+	return hash;
+}
+
+/**
+ * 判断是否正确
+ * */
+bool isValid(string str){
+	if(str[0] >= '0' && str[0] <= '9') return false;
+	for (int i = 0; i < str.size(); i++){
+		if((str[i] >= '0' && str[i] <= '9') || (str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] == '_') continue;
+		else return false;
+	}
+
+	//关键字
+	for(auto x : varType){
+		if(x == str) return false;
+	}
+
+	//重复
+	if(globalMap[str] || localMap[str]) return false;
+	return true;
+}
+
+/**
  * 用一个标志位flag 遇见“{”为真 遇见”}“为假，为假时候的变量是全局的
  * 因为是从上往下扫描 所以为真时候的最近的函数名就是这个变量的所属的函数
  * 只用一个字符串func存储函数名 用一个flag标志位 就行了
@@ -273,6 +306,10 @@ void pushToGlobal(string src){
 		func = "";
 		return;
 	}
+	for(auto c : src){
+		if(c == '{') cnt++;
+		if(c == '}') cnt--;
+	}
 	vector<string> tmp = split(src, " "); //按照空格分割字符串
 
 	int i = 0;
@@ -283,7 +320,7 @@ void pushToGlobal(string src){
 
 	if((i+1) < tmp.size() && isVarType(tmp[i+1])) i++;  //如long long 等类型的判断
 	i++;//跳到变量/函数名位置
-	//cout << tmp[i] << " ";
+	cout << tmp[i] << " ";
 	string type = tmp[i - 1];
 
 	// 判断是函数
@@ -297,14 +334,20 @@ void pushToGlobal(string src){
 			if(tmp[i][j] == '(') break;
 			str += tmp[i][j];
 		}
+		int hash = hashToInt(str);
 		func = str;  //相邻最近的函数名称
-
-		//存入表
-		gtn.name = str;
-		gtn.type = tmp[i-1];
-		gtn.id = global_cnt;
-		globalMap[str] = global_cnt++;
-		globalTable.push_back(gtn);
+		if(!isValid(str)){
+			cout << " " << str << " is Invalid!" << endl;
+		}
+		else{
+			//存入表
+			
+			gtn.name = str;
+			gtn.type = tmp[i-1];
+			gtn.id = global_cnt;
+			globalMap[str] = global_cnt++;
+			globalTable.push_back(gtn);
+		}
 	} 
 
 	//判断是变量，变量可以有很多个
@@ -318,7 +361,13 @@ void pushToGlobal(string src){
 			if (tmp[i][j] == ';' || tmp[i][j] == '=' || tmp[i][j] == ',') break;
 			str += tmp[i][j];
 		}
-		if(!falg){ //全局变量
+		int hash = hashToInt(str);
+		if(!isValid(str)){
+			cout << " " << str << " is Invalid!" << endl;
+			i++;
+			continue;
+		}
+		if(!cnt){ //全局变量
 			gtn.name = str;
 			gtn.type = type;
 			gtn.id = global_cnt;
