@@ -263,7 +263,7 @@ bool isVarType(string tar){
 int hashToInt(string s){
 	int hash = 0;
 	int offset = 'a' - 1;
-	for(string::const_iterator it=s.begin(); it!=s.end(); ++it) {
+	for(string::const_iterator it=s.begin(); it != s.end(); ++it) {
   		hash = hash << 1 | (*it - offset);
 	}
 	return hash;
@@ -320,7 +320,7 @@ void pushToGlobal(string src){
 
 	if((i+1) < tmp.size() && isVarType(tmp[i+1])) i++;  //如long long 等类型的判断
 	i++;//跳到变量/函数名位置
-	cout << tmp[i] << " ";
+	//cout << tmp[i] << " ";
 	string type = tmp[i - 1];
 
 	// 判断是函数
