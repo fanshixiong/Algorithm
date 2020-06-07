@@ -5,25 +5,27 @@ using namespace std;
 const int maxn = 2e5 + 10;
 int a[maxn];
 void solve(){
-    string s;cin >> s;
-    int suf0 = 0, suf1 = 0;
-    for (auto c : s){
-        if(c == '0') suf0++;
-        else suf1++;
+    int n; cin >> n;
+    
+    for (int i = 0; i < n; i++) cin >> a[i];
+    if(n % 2){
+        cout << -1 << endl;
+        return;
     }
-    int ans = min(suf0, suf1);
-    int pre0 = 0, pre1 = 0;
-    for(auto c : s){
-        if (c == '0'){
-            pre0++; suf0--;
+    int cnt[1200];
+    memset(cnt, 0, sizeof cnt);
+    for (int i = 0; i < n; i++){
+        for (int j = i + 1; j < n; j++){
+            cnt[a[i] ^ a[j]]++;
         }
-        else{
-            pre1++; suf1--;
-        }
-        ans = min(ans, pre0 + suf1);
-        ans = min(ans, pre1 + suf0);
     }
-    cout << ans << endl;
+    for (int i = 0; i < 1025; i++){
+        if(cnt[i] == n/2){
+            cout << i <<endl;
+            return;
+        }
+    }
+    cout << -1 << endl;
 }
 int main(){
     IOS; int t; cin >> t;
