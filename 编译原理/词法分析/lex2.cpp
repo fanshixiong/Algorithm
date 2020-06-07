@@ -7,14 +7,14 @@
 #include<bits/stdc++.h> 
 using namespace std; 
 
-#define MAX 16
+#define MAXN 16
 bool flg = false;
 
-string key[MAX]={"begin", "end", "if", "then", "else", "while", "write", "do", "call", 
+string key[MAXN]={"begin", "end", "if", "then", "else", "while", "write", "do", "call", 
 				"const", "char", "until", "procedure", "repeat", "int"}; 
 
 bool Iskey(string c){         //关键字判断  
-	for(int i = 0; i < MAX; i++) {  
+	for(int i = 0; i < MAXN; i++) {  
 		if(key[i].compare(c) == 0)  return true; 
 	}
 	return false; 
@@ -200,6 +200,7 @@ struct globalTableNode{
 	string name;  //变量名/函数名
 	string type;  //变量/函数类型
 	vector<int> toLocalId;  //对应的局部函数地址
+	bool specification; //命名不规范
 };
 
 //局部符号表
@@ -208,7 +209,83 @@ struct localTableNode{
 	int id; //局部变量id
 	string name; //局部变量名
 	string type; //局部变量类型
+	int state;  //几层语句块
+	bool specification; //命名不规范	
+	bool isRepeation;  //重复
 };
+
+typedef struct HashNode{
+	localTableNode data;  //存储值 
+	int isNull;       //标志该位置是否已被填充 
+}HashTable;
+
+const int MAX = 1100;
+HashTable hashTable[MAX];
+
+
+/**
+ * 哈希
+ * */
+int hashToInt(string s){
+	int hash = 0;
+	int offset = 'a' - 1;
+	for(string::const_iterator it=s.begin(); it != s.end(); ++it) {
+  		hash = hash << 1 | (*it - offset);
+	}
+	return abs(hash);
+}
+
+/**
+ * 对hash表进行初始化
+ * */
+void initHashTable() {
+	for (int i = 0; i < MAX; i++){
+		hashTable[i].isNull = 1;    //初始状态为空 
+	}
+}
+/**
+ * hash函数
+ * */
+int getHashAddress(int key){
+	return key % 77;
+}
+/**
+ * 插入
+ * */
+void insert(int key, localTableNode node){
+	int address = getHashAddress(key);
+	if (hashTable[address].isNull == 1){  //没有发生冲突 
+		hashTable[address].data = node;
+		hashTable[address].isNull = 0;
+	}else{    //当发生冲突的时候 
+		while (hashTable[address].isNull == 0 && address < MAX){
+			if (hashTable[address].data.name == node.name && node.state == hashTable[address].data.state) {
+				node.isRepeation = 1;
+			}
+			address++;          //采用线性探测法，步长为1 
+		}
+		if (address >= MAX) {      //Hash表发生溢出 
+			cout << "Hash表溢出 " << endl;
+			return;
+		}
+		hashTable[address].data = node;
+		hashTable[address].isNull = 0;
+	}
+}
+/**
+ * 查找
+ * */
+int find(int key, localTableNode node)	{
+	int address = getHashAddress(key);
+	while (!(hashTable[address].isNull == 0 && hashTable[address].data.name == node.name && address < MAX)){
+		address++;
+	}
+
+	if (address >= MAX){
+		address = -1;
+	}
+	return address;
+}
 /**
  * 全局符号表和局部符号表的hash值
  * cnt对应唯一的hash值，可以保证每一个变量/函数名称对应唯一的cnt
@@ -257,17 +334,6 @@ bool isVarType(string tar){
 	return false;
 }
 
-/**
- * 哈希
- * */
-int hashToInt(string s){
-	int hash = 0;
-	int offset = 'a' - 1;
-	for(string::const_iterator it=s.begin(); it != s.end(); ++it) {
-  		hash = hash << 1 | (*it - offset);
-	}
-	return hash;
-}
 
 /**
  * 判断是否正确
@@ -284,8 +350,6 @@ bool isValid(string str){
 		if(x == str) return false;
 	}
 
-	//重复
-	if(globalMap[str] || localMap[str]) return false;
 	return true;
 }
 
@@ -303,6 +367,7 @@ string func;
 void pushToGlobal(string src){
 	if(src == "}"){
 		falg = 0;
+		cnt--;
 		func = "";
 		return;
 	}
@@ -336,18 +401,14 @@ void pushToGlobal(string src){
 		}
 		int hash = hashToInt(str);
 		func = str;  //相邻最近的函数名称
-		if(!isValid(str)){
-			cout << " " << str << " is Invalid!" << endl;
-		}
-		else{
+
 			//存入表
-			
-			gtn.name = str;
-			gtn.type = tmp[i-1];
-			gtn.id = global_cnt;
-			globalMap[str] = global_cnt++;
-			globalTable.push_back(gtn);
-		}
+		if(!isValid(str)) gtn.specification = 1;
+		gtn.name = str;
+		gtn.type = tmp[i-1];
+		gtn.id = global_cnt;
+		globalMap[str] = global_cnt++;
+		globalTable.push_back(gtn);
 	} 
 
 	//判断是变量，变量可以有很多个
@@ -355,29 +416,32 @@ void pushToGlobal(string src){
 		//cout << tmp[i] << endl;
 		globalTableNode gtn;
 		localTableNode ltn;
-		if(!falg) gtn.var = 1;
 		string str = "";
 		for (int j = 0; j < tmp[i].size(); j++){
 			if (tmp[i][j] == ';' || tmp[i][j] == '=' || tmp[i][j] == ',') break;
 			str += tmp[i][j];
 		}
+		//cout << str << "  " << isValid(str) << endl;
 		int hash = hashToInt(str);
-		if(!isValid(str)){
-			cout << " " << str << " is Invalid!" << endl;
-			i++;
-			continue;
-		}
 		if(!cnt){ //全局变量
+			if(!isValid(str)) gtn.specification = 1;
+			gtn.var = 1;
 			gtn.name = str;
 			gtn.type = type;
 			gtn.id = global_cnt;
 			globalMap[str] = global_cnt++;
 			globalTable.push_back(gtn);
 		}else{  //局部变量
+			ltn.specification = 0;
+			ltn.isRepeation = 0;
+			if(!isValid(str)) ltn.specification = 1;
 			ltn.funcName = func;  //与这个局部变量相邻最近的函数名称
 			ltn.name = str;
 			ltn.type = type;
 			ltn.id = local_cnt;
+			ltn.state = cnt;
+			insert(hashToInt(str), ltn);
+			if(localMap[str]) ltn.isRepeation = 1;
 			localMap[str] = local_cnt;
 			/**
 			 * globalMap[func]对应名称为func的hash值，可以跳到全局符号表相应的位置
@@ -399,10 +463,20 @@ void print(){
 		cout << v.name << "\t\t" << (v.var ? ("变量") : ("函数")) << "\t" << v.type << endl;
 	}
 	cout << "局部符号表：" << endl;
-	cout << "所属函数\t变量名\t变量类型" << endl; 
+	cout << "所属函数\t变量名\t变量类型\t状态\t合法性\t作用域" << endl;  
 	for(auto v : localTable){
-		cout << v.funcName << "\t\t" << v.name << "\t" << v.type << "\t" << endl;
+		cout << v.funcName << "\t\t" << v.name << "\t" << v.type << "\t\t" << (v.isRepeation ? "重复" : "") << "\t" << (v.specification ? "不合法  " : "      \t") << v.state << endl;
 	}
+	cout << endl;
+	/*
+	cout << "局部符号表：" << endl;
+	cout << "所属函数\t变量名\t变量类型\t状态\t合法性\t作用域" << endl; 
+	for(auto v : localTable){
+		string name = v.name;
+		int address = find(hashToInt(name), v);
+		localTableNode x = hashTable[address].data;
+		cout << x.funcName << "\t\t" << x.name << "\t" << x.type << "\t\t" << (x.isRepeation ? "重复" : "") << "\t" << (x.specification ? "不合法  " : "      \t") << x.state << endl;
+	}*/
 	cout << endl;
 }
 
@@ -416,6 +490,7 @@ int main() {
 		cerr<<"open error!!"<<endl;
 		exit(1);
 	}
+	initHashTable();
 	while(infile){
 		infile >> a[i++];
 	}
