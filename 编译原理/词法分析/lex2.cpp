@@ -138,7 +138,7 @@ void analyse(string fpin){
 				   			if(arr == ":=" || arr == ":") cout << "[" << arr << "\t$运算符" << "]" << endl;
 				   			else cout << "[" << arr << "\t$无法识别字符" << "]" << endl;
 						}
-						break;
+						break; 
 			   	case '>':
 				   		{
 				   			while(*ch != NULL){	
