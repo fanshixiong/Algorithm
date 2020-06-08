@@ -4,20 +4,14 @@ using namespace std;
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 2e5 + 10;
 void solve(){
-    int n, x; cin >> n >> x;
-    int degred[n + 1];
-    memset(degred, 0, sizeof degred);
-    for (int i = 1; i < n; i++){
-        int u, v;
-        cin >> u >> v;
-        degred[u]++; degred[v]++;
+    ll n;
+    cin >> n;
+    ll ans = 0;
+    while(n){
+        ans += n;
+        n >>= 1;
     }
-    if(degred[x] <= 1){
-        cout << "Ayush" << endl;
-        return;
-    }
-    if(n % 2 == 0) cout << "Ayush" << endl;
-    else cout << "Ashish" << endl;
+    cout << ans << endl;
 }
 int main(){
     IOS; int t; cin >> t;

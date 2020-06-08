@@ -259,7 +259,7 @@ void insert(int key, localTableNode node){
 		hashTable[address].isNull = 0;
 	}else{    //当发生冲突的时候 
 		while (hashTable[address].isNull == 0 && address < MAX){
-			if (hashTable[address].data.name == node.name && node.state == hashTable[address].data.state) {
+			if (hashTable[address].data.name == node.name && node.state == hashTable[address].data.state && node.funcName == hashTable[address].data.funcName) {
 				node.isRepeation = 1;
 			}
 			address++;          //采用线性探测法，步长为1 
@@ -468,7 +468,7 @@ void print(){
 		cout << v.funcName << "\t\t" << v.name << "\t" << v.type << "\t\t" << (v.isRepeation ? "重复" : "") << "\t" << (v.specification ? "不合法  " : "      \t") << v.state << endl;
 	}
 	cout << endl;
-	/*
+	
 	cout << "局部符号表：" << endl;
 	cout << "所属函数\t变量名\t变量类型\t状态\t合法性\t作用域" << endl; 
 	for(auto v : localTable){
@@ -476,7 +476,7 @@ void print(){
 		int address = find(hashToInt(name), v);
 		localTableNode x = hashTable[address].data;
 		cout << x.funcName << "\t\t" << x.name << "\t" << x.type << "\t\t" << (x.isRepeation ? "重复" : "") << "\t" << (x.specification ? "不合法  " : "      \t") << x.state << endl;
-	}*/
+	}
 	cout << endl;
 }
 
@@ -503,7 +503,7 @@ int main() {
 
 	cout << "\n********************分析如下*********************" << endl;
 	for(int j = 0; j <= i; j++){
-		//analyse(a[j]);
+		analyse(a[j]);
 	}
 	cout << endl;
 	//system("pause");
