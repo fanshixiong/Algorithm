@@ -1,35 +1,7 @@
-#include <iostream>
-#include <string>
+#include <iostram>
 using namespace std;
-int main()
-{
-	long p[30];
-    long i, num, count, s, c = 0;
-	for(num = 2; num <= 10000; num++)
-	{
-		count = 0;
-		s = num;
-		for(i = 1; i < num/2+1; i++)
-		{
-			if(num % i == 0)
-			{
-				p[count++] = i;
-				s -= i;
-			}
-		}
-		if(s == 0)
-		{
-			cout << num << "是一个完数,因子是";
-			cout << num << "=" << p[0];
-			for(i = 1; i < count; i++)
-			{
-				cout << "+" <<  p[i];
-			}
-			cout << endl;
-			c++;
-		}
-	}
-	//cout << endl;
-	cout << "一共有" << c << "个完数" << endl;
-	return 0; 
-} 
+int main(){
+    int t; 
+    cin >> t;
+    return 0;
+}

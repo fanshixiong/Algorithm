@@ -484,8 +484,8 @@ int main() {
 	string a[10000];
 	int i = 0;
 	ifstream infile;
-	infile.open("test.txt");
-	ifstream in("test.txt");
+	infile.open("data.txt");
+	ifstream in("data.txt");
 	if(!infile || !in){
 		cerr<<"open error!!"<<endl;
 		exit(1);
