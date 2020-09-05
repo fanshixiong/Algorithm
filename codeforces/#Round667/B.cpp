@@ -5,28 +5,22 @@ using namespace std;
 const int maxn = 2e5 + 10;
 int a[maxn];
 void solve(){
-    int n; cin >> n;
-    for (int i = 0; i < n; i++) cin >> a[i];
-    ll ans = 1e15;
-    sort(a, a + n);
-    for (int i = 1; i < 1e6+5; i++){
-        ll fac = 1, tmp = a[0] - 1;
-        bool flag = false;
-        for (int j = 1; j < n; j++){
-            fac *= i;
-            tmp += fabs(fac - a[j]);
-            if(tmp >= ans){
-                flag = true;
-                break;
-            }
-        }
-        if(flag) break;
-        ans = min(ans, tmp);
+    ll a, b, x, y, n;
+    cin >> a >> b >> x >> y >> n;
+
+    ll ans = 1e18;
+    for (int i = 0; i<2; i++){
+        ll da = min(n, a - x);
+        ll db = min(n - da, b - y);
+
+        ans = min(ans, 1ll * (a - da) * (b - db));
+        swap(a, b);
+        swap(x, y);
     }
     cout << ans << endl;
 }
 int main(){
-    IOS; int t = 1;
+    IOS; int t; cin >> t;
     while(t--){
         solve();
     }
