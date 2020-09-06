@@ -5,34 +5,24 @@ using namespace std;
 const int maxn = 2e5 + 10;
 ll a[maxn];
 void solve(){
-    int n; cin >> n;
-    for (int i = 0; i < n; i++) cin >> a[i];
+    int n, x, y; 
+    cin >> n >> x >> y;
+    int diff = y - x;
+    for (int delta = 1; delta <= diff; delta++){
+        if(diff % delta)continue;
+        if(diff / delta + 1 > n) continue;
 
-    if(n == 1){
-        cout << "1 1" << endl;
-        cout << "0" << endl;
-        cout << "1 1" << endl;
-        cout << "0" << endl;
-        cout << "1 1" << endl;
-        cout << -a[0] << endl;
+        int k = min((y - 1) / delta, n - 1);
+        int start = y - k * delta;
+        for (int i = 0; i < n; i++){
+            cout << start + delta * i << " ";
+        }
+        cout << endl;
         return;
     }
-    cout << "1 1" << endl;
-    cout << -a[0] << endl;
-    cout << 1 << " " << n << endl;
-    cout << 0 << " ";
-    for (int i = 1; i < n; i++){
-        cout << 1ll * -n * a[i] << " ";
-    }
-    cout << endl;
-    cout << 2 << " " << n << endl;
-    for (int i = 1; i < n; i++){
-        cout << 1ll * (n - 1) * a[i] << " ";
-    }
-    cout << endl;
 }
 int main(){
-    IOS; int t = 1;
+    IOS; int t; cin >> t;
     while(t--){
         solve();
     }
