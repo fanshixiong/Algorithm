@@ -5,21 +5,39 @@ using namespace std;
 const int maxn = 2e5 + 10;
 ll a[maxn];
 void solve(){
-    int n, x, y; 
-    cin >> n >> x >> y;
-    int diff = y - x;
-    for (int delta = 1; delta <= diff; delta++){
-        if(diff % delta)continue;
-        if(diff / delta + 1 > n) continue;
-
-        int k = min((y - 1) / delta, n - 1);
-        int start = y - k * delta;
-        for (int i = 0; i < n; i++){
-            cout << start + delta * i << " ";
+    int n, k;
+    cin >> n >> k;
+    string s;
+    cin >> s;
+    bool ok = 0;
+    for (int i = 0; i < k; i++){
+        char c = s[i];
+        bool flg = 0;
+        for (int j = i; j < s.size(); j += k){
+            if(s[j] == '?') continue;
+            if (c == '?' && s[j] != '?'){
+                c = s[i] = s[j];
+                continue;
+            }
+            if(c != '?' && s[j] != c){
+                flg = 1;
+                break;
+            }
         }
-        cout << endl;
-        return;
+        if(flg){
+            ok = 1;
+            break;
+        }
     }
+
+    int a = 0, b = 0;
+    for(int i=0; i<k; i++){
+        if(s[i] == '0') a++;
+        else if(s[i] == '1') b++;
+    }
+    if(a>k/2 || b>k/2) ok=1;
+    if(ok) cout << "NO" << endl;
+    else cout << "YES" << endl;
 }
 int main(){
     IOS; int t; cin >> t;
