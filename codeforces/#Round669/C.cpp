@@ -7,12 +7,12 @@ int ans[maxn];
 void solve(){
     int n;
     cin >> n;
-    int p = 1;
-    for (int i = 2; i < n; i++){
+    int p = 0;
+    for (int i = 1; i < n; i++){
         int a, b;
-        cout << "? " << p << " " << i << endl;
+        cout << "? " << p+1 << " " << i+1 << endl;
         cin >> a;
-        cout << "? " << i << " " << p << endl;
+        cout << "? " << i+1 << " " << p+1 << endl;
         cin >> b;
         if(a < b){
             ans[i] = b;
@@ -23,11 +23,11 @@ void solve(){
     }
     ans[p] = n;
     cout << "! ";
-    for (int i = 1; i <= n; i++) cout << ans[i] << " ";
+    for (int i = 0; i < n; i++) cout << ans[i] << " ";
     cout << endl;
 }
 int main(){
-    IOS; int t; cin >> t;
+    IOS; int t=1;
     while(t--){
         solve();
     }
