@@ -6,13 +6,13 @@ const int maxn = 2e5 + 10;
 int a[maxn];
 void solve(){
     int n; cin >> n;
-    map<int, int> cnt;
+    vector<int> cnt(101, 0);
     for (int i = 0; i < n; i++){
         int x; cin >> x;
         cnt[x]++;
     }
     int ans = -1;
-    for (int i = 0; i < n; i++){
+    for (int i = 0; i <= 100; i++){
         if(cnt[i] == 1){
             if(ans == -1) ans = i;
         }
