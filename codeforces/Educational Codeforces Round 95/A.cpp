@@ -4,9 +4,9 @@ using namespace std;
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 2e5 + 10;
 void solve(){
-    int x, y, k;
+    ll x, y, k;
     cin >> x >> y >> k;
-    cout << (y * (k + 1) - 1) / (x - 1) + k;
+    cout << 1ll * ((y + 1) * k - 1 + x - 2) / (x - 1) + k << endl;
 }
 int main(){
     IOS; int t; cin >> t;
