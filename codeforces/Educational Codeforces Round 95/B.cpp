@@ -4,26 +4,26 @@ using namespace std;
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 2e5 + 10;
 void solve(){
-    int x, y, m, n; cin >> n >> m >> x >> y;
-    int single = 0, doub = 0;
+    int n;
+    cin >> n;
+    vector<int> a, b, c;
     for (int i = 0; i < n; i++){
-        string s; cin >> s;
-        for (int j = 0; j < m; j++){
-            if(s[j] == '.'){
-                if(j+1 < m && s[j+1] == '.'){
-                    doub++;
-                    s[j] = s[j + 1] = '*';
-                }
-                else{
-                    single++;
-                    s[j] = '*';
-                }
-            }
-        }
+        int x; cin >> x;
+        a.emplace_back(x);
     }
+    for (int i = 0; i < n; i++){
+        int x; cin >> x;
+        b.emplace_back(x);
+    }
+    for (int i = 0; i < n; i++) if(!b[i])c.emplace_back(a[i]);
 
-    y = min(y, 2 * x);
-    cout << single * x + doub * y << endl;
+    sort(c.rbegin(), c.rend());
+
+    for (int i = 0, j = 0; i < n; i++){
+        if(b[i]) cout << a[i] << " ";
+        else cout << c[j++] << " ";
+    }
+    cout << endl;
 }
 int main(){
     IOS; int t; cin >> t;
