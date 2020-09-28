@@ -1,0 +1,15 @@
+[Template]
+ver=1
+Name=Empty Project
+IconIndex=4
+Description=An empty project
+Category=Basic
+
+[Unit0]
+CName=
+CppName=
+
+[Project]
+UnitCount=1
+Type=1
+Name=Empty app

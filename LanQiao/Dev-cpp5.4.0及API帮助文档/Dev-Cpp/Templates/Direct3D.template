@@ -1,0 +1,18 @@
+[Template]
+ver=1
+Name=Direct3D
+Icon=
+Description=A basic Direct3D program
+Category=Multimedia
+
+[Unit0]
+CName=main.cpp
+CppName=main.cpp
+C=Direct3D.txt
+Cpp=Direct3D.txt
+
+[Project]
+UnitCount=1
+Type=0
+Linker="C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib/libd3d9.a" "C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib/libd3dx9_43.a"
+Name=Direct3D Demo
