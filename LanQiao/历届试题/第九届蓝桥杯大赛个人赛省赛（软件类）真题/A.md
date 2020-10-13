@@ -364,14 +364,84 @@ $14:22:05$
 
 #### 思路
 
-
+字符串处理
 
 
 
 #### 代码
 
 ```cpp
-
+#include<bits/stdc++.h>
+using namespace std;
+char str[50];
+//初始化字符串数组
+void init(){
+    for(int i=0;i<35;i++){
+        str[i]='0';
+    }
+}
+//string to int
+int str2int(char h1,char h2,char m1,char m2,char s1,char s2){
+    cout<<h1<<h2<<" "<<s1<<s2<<endl;
+    int hts=((h1-'0')*10+(h2-'0'))*3600;
+    int mts=((m1-'0')*10+(m2-'0'))*60;
+    int sec=hts+mts+((s1-'0')*10+(s2-'0'));
+    cout<<hts<<" "<<mts<<" "<<sec<<endl;
+    return sec;
+}
+//int to string  &  display
+int int2str(int t){
+    int h=t/3600;
+    int m=(t-h*3600)/60;
+    int s=t-h*3600-m*60;
+    switch(((h>=10)?1:0)){
+        case 0:cout<<"0"<<h<<":";
+                break;
+        default: cout<<h<<":";
+                break;
+    }
+    switch(((m>=10)?1:0)){
+        case 0:cout<<"0"<<m<<":";
+                break;
+        default: cout<<m<<":";
+                break;
+    }
+    switch(((s>=10)?1:0)){
+        case 0:cout<<"0"<<s<<endl;
+                break;
+        default: cout<<s<<endl;
+                break;
+    }
+}
+int main(){
+    int t;
+    cin>>t;
+    getchar();//读取一个字符串，消除"\n"的影响
+    int t1s,t1e,t1,t2s,t2e,t2,final;
+    while(t--){
+        init();
+        gets(str);//获取一行字符串
+        t1s=str2int(str[0],str[1],str[3],str[4],str[6],str[7]);
+        t1e=str2int(str[9],str[10],str[12],str[13],str[15],str[16]);
+        if(str[19]=='+'){
+            t1e+=(str[20]-'0')*(3600*24);
+        }
+        t1=t1e-t1s;
+        cout<<t1<<endl;
+        init();
+        gets(str);
+        t2s=str2int(str[0],str[1],str[3],str[4],str[6],str[7]);
+        t2e=str2int(str[9],str[10],str[12],str[13],str[15],str[16]);
+        if(str[19]=='+'){
+            t2e+=(str[20]-'0')*(3600*24);
+        }
+        t2=t2e-t2s;
+        cout<<t2<<endl;
+        final=(t2+t1)/2;
+        cout<<final<<endl;
+        int2str(final);
+    }
+}
 ```
 
 
@@ -421,14 +491,49 @@ $2$
 
 #### 思路
 
+满分题解：三维差分。
 
+考试中：暴力。
 
 
 
 #### 代码
 
 ```cpp
+#include<bits/stdc++.h>
 
+using namespace std;
+ 
+int a[200][200][200];
+ 
+int main() {
+	freopen("7.txt", "r", stdin);
+	
+	int A, B, C, m;
+	scanf("%d%d%d%d", &A, &B, &C, &m);
+	for (int i = 0; i < A; i++) {
+		for (int j = 0; j < B; j++) {
+			for (int k = 0; k < C; k++)
+				scanf("%d", &a[i][j][k]);
+		}
+	}
+	int lat, rat, lbt, rbt, lct, rct, ht;
+	for (int i = 1; i <= m; i++) {
+		scanf("%d%d%d%d%d%d%d", &lat, &rat, &lbt, &rbt, &lct, &rct, &ht);
+		for (int j = lat - 1; j <= rat - 1; j++) {
+			for (int k = lbt - 1; k <= rbt - 1; k++) {
+				for (int p = lct - 1; p <= rct - 1; p++) {
+					a[j][k][p] -= ht;
+					if (a[j][k][p] < 0) {
+						printf("%d\n", i);
+						exit(0);
+					}
+				}
+			}
+		}
+	}
+	return 0;
+}
 ```
 
 
@@ -604,14 +709,10 @@ int main(){
 众所周知，小葱同学擅长计算，尤其擅长计算一个数是否是另外一个数的倍数。但小葱只擅长两个数的情况，当有很多个数之后就会比较苦恼。现在小葱给了你 n 个数，希望你从这 n 个数中找到三个数，使得这三个数的和是 K 的倍数，且这个和最大。数据保证一定有解。
 
 【输入格式】
-从标准输入读入数据。
-
-第一行包括 2 个正整数 n, K。
-第二行 n 个正整数，代表给定的 n 个数。
+从标准输入读入数据。第一行包括 2 个正整数 n, K。 第二行 n 个正整数，代表给定的 n 个数。
 
 【输出格式】
-输出到标准输出。
-输出一行一个整数代表所求的和。
+输出到标准输出。 输出一行一个整数代表所求的和。
 
 【样例入】
 4 3
