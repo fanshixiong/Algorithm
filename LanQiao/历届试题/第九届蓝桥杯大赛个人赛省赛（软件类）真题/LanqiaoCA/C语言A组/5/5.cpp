@@ -27,7 +27,7 @@ void draw(char* buf, int w, int x, int y, int size){
 
 int main()
 {
-	int N = 2;
+	int N = 3;
 	int t = 1;
 	int i;
 	for(i=0; i<N; i++) t *= 3;
