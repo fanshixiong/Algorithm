@@ -1,15 +1,29 @@
 #include <bits/stdc++.h>
+
 using namespace std;
-#define ll long long
-#define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
-const int maxn = 2e5 + 10;
-void solve(){
-    int n; cin >> n;
-}
-int main(){
-    IOS; int t; cin >> t;
-    while(t--){
-        solve();
+const int maxn = 3e5 + 10;
+int a[maxn], dp[maxn];
+int main() {
+    int n;
+    scanf("%d",&n);
+    for(int i = 0; i < n; i++) scanf("%d",&a[i]);
+    sort(a, a + n);
+
+    memset(dp, 0, sizeof dp);
+    int max = 0;
+    for (int i = 0; i < n; ++i) {
+        int limit = a[i] / 2;
+        int maxcount = 1;
+        for (int j = 0; a[j] <= limit; ++j) {
+            if (a[i] % a[j] == 0) {
+                if (dp[j] + 1 > maxcount) {
+                    maxcount = dp[j] + 1;
+                }
+            }
+        }
+        dp[i] = maxcount;
     }
-    return 0;
+    for(int i = 0; i < n; i++) if(dp[i]>max) max=dp[i]; 
+    printf("%d ", max);
+ 
 }
