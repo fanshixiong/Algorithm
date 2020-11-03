@@ -5,24 +5,9 @@ using namespace std;
 const int maxn = 2e5 + 10;
 int a[maxn];
 void solve(){
-    int n; cin >> n;
-    vector<int> cnt(101, 0);
-    for (int i = 0; i < n; i++){
-        int x; cin >> x;
-        cnt[x]++;
-    }
-    int ans = -1;
-    for (int i = 0; i <= 100; i++){
-        if(cnt[i] == 1){
-            if(ans == -1) ans = i;
-        }
-        if(cnt[i] == 0){
-            if(ans == -1) ans = i+i;
-            else ans += i;
-            break;
-        }
-    }
-    cout << ans << endl;
+    int a, b, c, d;
+    cin >> a >> b >> c >> d;
+    cout << max(a + b, c + d) << endl;
 }
 int main(){
     IOS; int t; cin >> t;
