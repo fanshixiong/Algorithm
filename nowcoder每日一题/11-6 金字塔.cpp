@@ -19,6 +19,7 @@ void solve(){
         for (int i = 1; i + l <= n; i++){
             int j = i + l;
             if(s[i-1] != s[j-1]) continue;
+            // 以i为根
             dp[i][j] += dp[i + 1][j - 1];
             for (int k = i + 1; k < j; k++)
                 if(s[k-1] == s[j-1]) dp[i][j] = (dp[i][j] + dp[i + 1][k - 1] * dp[k][j] % mod) % mod;
