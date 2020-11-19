@@ -70,7 +70,9 @@
         "scoped_allocator": "cpp",
         "shared_mutex": "cpp",
         "streambuf": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "rope": "cpp",
+        "slist": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "git.ignoreLimitWarning": true,

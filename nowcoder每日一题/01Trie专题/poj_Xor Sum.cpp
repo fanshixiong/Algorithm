@@ -12,11 +12,11 @@ int a[maxn];
 int sz = 1, rt = 1;
 int m, n, t, T;
 
-void insert(int u, int t, int x, int id){
-    if(t < 0) { value[u] = id; return; }
+void insert(int u, int t, int x){
+    if(t < 0) { value[u] = x; return; }
     int i = (x >> t) & 1;
     if(!ch[u][i]) ch[u][i] = ++sz;
-    insert(ch[u][i], t - 1, x, id);
+    insert(ch[u][i], t - 1, x);
 }
 
 int query(int u, int t, int x){
@@ -31,12 +31,12 @@ void solve(){
     memset(ch, 0, sizeof ch);
     sz = rt = 1;
     memset(value, 0, sizeof value);
-    for(int i = 1; i <= n; i++) a[i] = read(), insert(rt, 31, a[i], i);
+    for(int i = 1; i <= n; i++) a[i] = read(), insert(rt, 31, a[i]);
 
     printf("Case #%d:\n", t - 1);
     for (int i = 1; i <= m; i++){
         int s = read();
-        printf("%d\n", a[query(rt, 31, s)]);
+        printf("%d\n", query(rt, 31, s));
     }
 }
 
