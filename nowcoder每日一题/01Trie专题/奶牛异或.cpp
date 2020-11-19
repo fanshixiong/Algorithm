@@ -1,3 +1,6 @@
+/*
+https://ac.nowcoder.com/acm/problem/22998
+*/
 #include<bits/stdc++.h>
 using namespace std;
 
