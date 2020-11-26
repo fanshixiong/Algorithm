@@ -1,5 +1,6 @@
 /*
 https://ac.nowcoder.com/acm/problem/112932
+https://codeforces.com/problemset/problem/1006/E
 */
 
 #include<bits/stdc++.h>

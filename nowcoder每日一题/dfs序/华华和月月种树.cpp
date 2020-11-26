@@ -54,7 +54,7 @@ int main(){
         }
     }
     dfs(0);
-    cout << cnt << endl;
+    // cout << cnt << endl;
     for(int i = 0; i < m; i++){
         if(op[i] == 1) val[l[b[i]]] -= query(l[a[i]]); 
         else if(op[i] == 2){
