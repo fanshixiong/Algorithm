@@ -1,29 +1,30 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll unsigned long long
+#define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 2e5 + 10;
-int ans[maxn];
 
+// 从后往前找
 void solve(){
-    ll p, q;
-    cin >> p >> q;
-    if(p % q) {
-        cout << p << endl;
-        return;
-    }
-    ll ans = 0;
-    for (ll i = 1; i * i <= q; i++){
-        if(q % i) continue;
-        ll t = p;
-        if(i != 1){
-            while(t % q == 0) t/=i;
-            ans = max(ans, t);
+    int n, p, k;
+    cin >> n >> p >> k;
+    string a; cin >> a;
+
+    ll x, y;
+    cin >> x >> y;
+
+    ll ans = 1e18;
+    for(int i = n - k + 1; i <= n; i++){
+        ll res = 0;
+        for (int r = i; r >= 1; r-=k){
+            if(a[r-1] == '0') res += x;
+            ll t = r - p;
+            if(t < 0) break;
+            ll p = t * y + res;
+            ans = min(ans, p);
         }
-        t = p;
-        while(t % q == 0) t /= (q/i);
-        ans = max(ans, t);
     }
+    
     cout << ans << endl;
 }
 int main(){

@@ -3,27 +3,24 @@ using namespace std;
 #define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 2e5 + 10;
-int a[maxn];
+int c[maxn];
 void solve(){
-    int a, b;
-    cin >> a >> b;
-    string s; cin >> s;
+    int n, k;
+    cin >> n >> k;
+    for (int i = 1; i <= n; i++) cin >> c[i];
 
-    vector<int> p;
-    for (int r = 0; r < (int)s.size(); r++){
-        if(s[r] == '1') p.push_back(r);
+    int res = 0x3f3f3f3f;
+    for (int maxp = 1; maxp <= 100; maxp++){
+        int ans = 0, i = 1;
+        while(i <= n && c[i] == maxp) i++;
+        while(i <= n){
+            ans++;
+            i += k;
+            while(i <= n && c[i] == maxp) i++;
+        }
+        res = min(res, ans);
     }
-    if((int)p.size() == 0){
-        cout << 0 << endl;
-        return;
-    }
-    
-    ll sum = a;
-    for (int i = 1; i < (int)p.size(); i++){
-        if(p[i]-p[i-1] <= 1) continue;
-        sum += min((p[i]-p[i-1]-1)*b, a);
-    }
-    cout << sum << endl;
+    cout << res << endl;
 }  
 int main(){
     IOS; int t; cin >> t;

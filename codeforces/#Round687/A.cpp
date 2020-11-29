@@ -5,9 +5,13 @@ using namespace std;
 const int maxn = 2e5 + 10;
 int a[maxn], b[maxn];
 void solve(){
-    int n; cin >> n;
-    for (int i = 4 * n; n; i -= 2) cout << i << " ", n--;
-    cout << endl;
+    int n, m, x, y;
+    cin >> n >> m >> x >> y;
+    int lu = abs(1 - x) + abs(1 - y);
+    int ld = abs(n - x) + abs(1 - y);
+    int ru = abs(1 - x) + abs(m - y);
+    int rd = abs(n - x) + abs(m - y);
+    cout << max(max(lu, max(ld, ru)), rd) << endl;
 }
 int main(){
     IOS; int t; cin >> t;
