@@ -3,35 +3,27 @@ using namespace std;
 #define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 3e5 + 10;
-int a[maxn], dp[maxn];
+int a[maxn], b[maxn];
 void solve(){
     int n; cin >> n;
-    memset(dp, 0x3f, sizeof dp);
-    stack<int> st1, st2; //递增， 递减
-    dp[n] = 0; st1.push(n); st2.push(n);
     for (int i = 1; i <= n; i++) cin >> a[i];
 
-    for (int i = n - 1; i >= 1; i--){
-        while(st1.size() && a[st1.top()] > a[i]){
-            dp[i] = min(dp[i], dp[st1.top()] + 1);
-            st1.pop();
-        }
-        if(st1.size()){
-            dp[i] = min(dp[i], dp[st1.top()] + 1);
-            if(a[st1.top()] == a[i]) st1.pop();
-        }
-        st1.push(i);
-        while(st2.size() && a[st2.top()] < a[i]){
-            dp[i] = min(dp[i], dp[st2.top()] + 1);
-            st2.pop();
-        }
-        if(st2.size()){
-            dp[i] = min(dp[i], dp[st2.top()] + 1);
-            if(a[st2.top()] == a[i]) st2.pop();
-        }
-        st2.push(i);
+    if(n > 60) {
+        // 1e9个数有30位2进制，那么2*30 = 60个数一定有三个高位一致的数，两个较小的数异或一定大于较大的数
+        cout << 1 << endl;
+        return;
     }
-    cout << dp[1] << endl;
+    for (int i = 1; i <= n; i++) b[i] = b[i-1] ^ a[i];
+
+    int ans = 1e9;
+    for (int i = 1; i <= n; i++)
+        for (int j = 0; j <= 60 && i - j > 0; j++)
+            for (int k = 0; k <= 60 && i + k < n; k++)
+                if ((b[i] ^ b[i - 1 - j]) > (b[i] ^ b[i + k + 1]))
+                    ans = min(ans, k + j);
+    if(ans == 1e9)
+        ans = -1;
+    cout << ans << endl;
 }
 int main(){
     IOS; int t = 1;
