@@ -3,25 +3,31 @@ using namespace std;
 #define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 const int maxn = 2e5 + 10;
-int a[maxn];
+int a[maxn], n, x;
+
+bool judge(int x){
+    for(int i = x; i <= n; i++) if(a[i] < a[i-1]) return false;
+
+    return true;
+}
 void solve(){
-    int n; cin >> n;
-    for (int i = 0; i < n; i++)cin >> a[i];
+    cin >> n >> x;
+    for (int i = 1; i <= n; i++)cin >> a[i];
 
     int ans = 0;
-    for (int x = 1; x <= 30; x++){
-        int sum = 0;
-        for (int i = 0; i < n; i++){
-            if(a[i] > x) continue;
-            sum += a[i];
-            if(sum < 0) sum = 0;
-            else ans = max(ans, sum - x);
-        } 
+    for (int i = 1; i <= n; i++){
+        if(a[i] <= x) continue;
+
+        if(judge(i + 1)) break;
+
+        swap(x, a[i]);
+        ans ++;
     }
+    for(int i = 2; i <= n; i++) if(a[i] < a[i-1]) ans = -1;
     cout << ans << endl;
 }
 int main(){
-    IOS; int t = 1;
+    IOS; int t; cin >> t;
     while(t--){
         solve();
     }
