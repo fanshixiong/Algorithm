@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
+const int maxn = 2e5 + 10;
+
+class Solution {
+public:
+    /**
+     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+     * 
+     * @param n int整型 
+     * @param a int整型vector 
+     * @return int整型
+     */
+    int wwork(int n, vector<int>& a) {
+        // write code here
+        int ans = 0;
+        while(a.size()){
+            int ma = a[0], p = 0;
+            for(int i = 1; i < a.size(); i++){
+                if(ma < a[i]){
+                    ma = a[i];
+                    p = i;
+                }
+            }
+            if(p != a.size()-1) ans++;
+            a.erase(a.begin() + ma);
+        }
+        return ans;
+    }
+};
