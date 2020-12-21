@@ -2,15 +2,12 @@
 using namespace std;
 #define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
-#define pi pair<int, int>
-#define pb push_back
-const int maxn = 1e6 + 10;
-
+const int maxn = 2e5 + 10;
 void solve(){
-       
+    int n; cin >> n;
 }
 int main(){
-    IOS; int t = 1;
+    IOS; int t; cin >> t;
     while(t--){
         solve();
     }

@@ -1,5 +1,5 @@
 #include<Winsock2.h>
-#includ<stdio.h>
+#include<stdio.h>
 #define DEFAULT_PORT 5050
 #define DATA_BUFFER 1024
 

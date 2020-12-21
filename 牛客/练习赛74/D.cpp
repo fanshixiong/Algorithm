@@ -5,73 +5,71 @@ using namespace std;
 #define pi pair<int, int>
 #define pb push_back
 const int maxn = 1e6 + 10;
-vector<pi> G[maxn];
 
+int f[maxn], w[3*maxn], u[maxn*3], v[maxn*3], p[maxn*3];
 
 int n, m, s, t; 
-bool dfs(int u, int fa, int x, int _){
-    for(auto p : G[u]){
-        int v = p.first, w = p.second;
-        if(v == fa) continue;
-        if(w < x) return false;
-
-        if(v == t) return true;
-        if(dfs(v, u, x, _)) return true;
-    }
-    return false;
-}
 int L, R;
 
-bool dsf2(int u, int fa){
-    for(auto p : G[u]){
-        int v = p.first, w = p.second;
-        if(v == fa) continue;
-        if(w < L) return false;
+void init(){
+    for(int i = 0; i <= n; i++) f[i] = i;
+}
 
-        if(v == t) return true;
-        if(dfs2(v, u)){
-            R = mid
-            return true;
-        }
-    }
-    return false;
+int find(int x){
+    if(x == f[x]) return x;
+    return f[x] = find(f[x]);
+}
+
+void union1(int x, int y) {
+    x = find(x);
+    y = find(y);
+    if (x == y) return;
+    f[y] = x;
+}
+
+bool cmp(int a, int b){
+    return w[a] > w[b];
 }
 
 void solve(){
     scanf("%d%d%d%d", &n, &m, &s, &t);
 
+    for(int i = 0; i < m; i++) p[i] = i;
+    for(int i = 0; i < m; i++) scanf("%d%d%d", &u[i], &v[i], &w[i]);
+
+    sort(p, p+m, cmp);
+    // for(int i = 0; i < m; i++) cout << w[p[i]] << endl;
+
+    init();
     for(int i = 0; i < m; i++){
-    	int x, y, w;
-    	scanf("%d%d%d", &x, &y, &w);
-    	G[x].pb({y, w});
-    	G[y].pb({x, w});
-    }
+        int x = u[p[i]], y = v[p[i]], wi = w[p[i]];
+        // cout << x << " " << y << " " << wi << endl;
+        union1(x, y);
 
-    // cout << dfs(s, -1, 3, 0);
-    
-    int L, R;
-    int l = 1, r = 1e9;
-    while(l <= r){
-        int mid = (l+r)/2;
-        if(dfs(s, -1, mid, 0)){
-            // cout << "L::: " << l << " " << r << " " << mid << endl;
-            L = mid;
-            l = mid+1;
+        if(find(s) == find(t)){
+            L = wi;
+            break;
         }
-        else r = mid-1;
     }
 
-    dfs2(s, -1);
+    init();
+    for(int i = m-1; i >= 0; i--){
+        int x = u[p[i]], y = v[p[i]], wi = w[p[i]];
+        if(wi < L) continue;
+        union1(x, y);
 
-    cout << L << " " << R << endl;
-    
+        if(find(s) == find(t)){
+            R = wi;
+            break;
+        }
+    }
+
+    printf("%d %d\n", L, R);
 }
 int main(){
     IOS; int t = 1;
     while(t--){
-        // solve();
-        map<pi, int> W;
-        W[{1, 1}] = 1;
+        solve();
     }
     return 0;
 }
