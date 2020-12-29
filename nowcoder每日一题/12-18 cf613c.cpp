@@ -1,3 +1,6 @@
+/*
+https://ac.nowcoder.com/discuss/580464?source_id=profile_create_nctrack&channel=-1
+*/
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
