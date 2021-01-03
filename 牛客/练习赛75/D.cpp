@@ -4,67 +4,48 @@ using namespace std;
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
 #define pi pair<int, int>
 #define pb push_back
-const int maxn = 1e6 + 10;
+const ll mod = 1e9 + 7;
+const int maxn = 1e5 + 10;
 
-int f[maxn], w[3*maxn], u[maxn*3], v[maxn*3], p[maxn*3];
-
-int n, m, s, t; 
-int L, R;
-
-void init(){
-    for(int i = 0; i <= n; i++) f[i] = i;
-}
-
-int find(int x){
-    if(x == f[x]) return x;
-    return f[x] = find(f[x]);
-}
-
-void union1(int x, int y) {
-    x = find(x);
-    y = find(y);
-    if (x == y) return;
-    f[y] = x;
-}
-
-bool cmp(int a, int b){
-    return w[a] > w[b];
-}
-
+ll a[maxn];
+ll n, k;
 void solve(){
-    scanf("%d%d%d%d", &n, &m, &s, &t);
+    cin >> n >> k;
+    for(int i = 0; i < n; i++) cin >> a[i];
 
-    for(int i = 0; i < m; i++) p[i] = i;
-    for(int i = 0; i < m; i++) scanf("%d%d%d", &u[i], &v[i], &w[i]);
+    
+    priority_queue<ll, vector<ll>, greater<ll> > pq;
+    sort(a, a + n);
+    for(int i = 0; i < n; i++) pq.push(a[i]);
 
-    sort(p, p+m, cmp);
-    // for(int i = 0; i < m; i++) cout << w[p[i]] << endl;
-
-    init();
-    for(int i = 0; i < m; i++){
-        int x = u[p[i]], y = v[p[i]], wi = w[p[i]];
-        // cout << x << " " << y << " " << wi << endl;
-        union1(x, y);
-
-        if(find(s) == find(t)){
-            L = wi;
-            break;
-        }
+    ll ans;
+    while((int)pq.size() > 1){
+        ll x = pq.top(); pq.pop();
+        ll y = pq.top(); pq.pop();
+        ans = x * y + k;
+        pq.push(ans);
+        if(ans >= a[n-1]) break;
+    }
+    if((int)pq.size() == 1){
+        cout << pq.top() % mod << endl;
+        return;
     }
 
-    init();
-    for(int i = m-1; i >= 0; i--){
-        int x = u[p[i]], y = v[p[i]], wi = w[p[i]];
-        if(wi < L) continue;
-        union1(x, y);
+    queue<ll> q;
+    while(!pq.empty()){
+        //cout << (int)pq.size() << " " << pq.empty() << endl;
+        ll x = pq.top() % mod; pq.pop();
 
-        if(find(s) == find(t)){
-            R = wi;
-            break;
-        }
+        //cout << (int)pq.size() << " " << pq.empty() << endl;
+        q.push(x);
     }
+    while((int)q.size() > 1){
+        ll x = q.front(); q.pop();
+        ll y = q.front(); q.pop();
 
-    printf("%d %d\n", L, R);
+        q.push((x * y % mod + k) % mod);
+    }
+    cout << q.front() << endl;
 }
 int main(){
     IOS; int t = 1;
