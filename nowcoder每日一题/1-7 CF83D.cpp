@@ -11,7 +11,7 @@ int a[maxn];
 ll L, R, k;
 
 bool isPrime(ll n){
-    for(ll i = 2; i <= n / i; i++){
+    for(ll i = ; i <= n / i; i++){
         if(n % i == 0) return false;
     }
     return true;
