@@ -44,3 +44,44 @@ Public Class frmTest
         picCanvas.Image = bk.Slide()
     End Sub
 End Class
+
+Public Class clsBitmap
+    Private bitmap As Bitmap
+    Private WithEvents ticker As Timer
+    Event Changed()
+    Private wx As Integer
+    Private Sub New(path As String)
+        bitmap = New Bitmap(path)
+        ticker = New Timer
+        wx = 0
+        ticker.Interval = 1000 : ticker.Enable = False
+    End Sub
+    Public Sub Start()
+        ticker.Enable = True
+    End Sub
+    Public Sub ticker_tick(sender, e) Handles ticker.Tick
+        wx += dx
+        RaiseEvent Changed()
+    End Sub
+    Public Function Slide() As Bitmap
+        Dim Target As New Bitmap(bitmap.Width, bitmap.Height)
+        For i = 0 To wx
+            For j = 0 To Target.height
+                Target.SetPixel(i, j, bitmap.getPixel(i, j))
+            Next
+        Next
+        Return Target
+    End Function
+End Class
+
+Public Class frmTest
+    Private WithEvent bitmap As clsBitmap
+    Private Sub New()
+        bitmap = New clsBitmap("1.jpg")
+        bitmap.Start()
+    End Sub
+
+    Public Sub Show() Handles bitmap.Changed
+        picCanvas.Image = bitmap.Slide()
+    End Sub
+End Class

@@ -48,7 +48,7 @@ Public class clsDirs
     public Function Search(Byval pattern As String) As List(Of String)
         Dim res As List(Of String)
         for i = 0 To files.count - 1
-            If files(i).count(pattern) = True Then
+            If files(i).contains(pattern) = True Then
                 res.add(files(i))
             End If
         Next
@@ -57,5 +57,37 @@ Public class clsDirs
             res.AddRange(r)
         Next
         Return res
+    End Function
+End Class
+
+Public Class clsFile
+    Private files As String
+    Private dirs As List(Of clsFile)
+    Public Sub New(path As String)
+        files = Directory.getFile(path)
+        Dim folders() As String = Directory.getDirectories(path) #
+        Redim dirs(folders.Count)
+        For i = 0 To folders.Count - 1
+            dirs(i) = New clsFile(folders(i))
+        Next
+    End Sub
+    Public Sub Output(lstInfo As ListBox)
+        For i = 0 To files.Count - 1
+            lstInfo.Items.Add(files(i))
+        Next
+        For i = 0 To dirs.Count - 1
+            dirs(i).Output(lstInfo)
+        Next
+    End Sub
+    Public Funciton Search(p As String) As List(Of String)
+        Dim res As List(Of String)
+        For i = 0 To files.Count - 1
+            If files.Contains(p) = True Then res.Add(files(i))
+        Next
+        For i = 0 To dirs.Count - 1
+            Dim r As List(Of String) = dirs(i).Search(p)
+            res.AddRange(r)
+        Next
+        return res
     End Function
 End Class

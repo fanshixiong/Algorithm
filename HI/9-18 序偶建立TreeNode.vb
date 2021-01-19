@@ -34,3 +34,31 @@ Public Class clsParentChilds
         tvfamily.Nodes.Add(Root)
     End Sub
 End Class
+
+Structure ParentChild
+    public parent As String
+    public child As String
+End Structure
+
+Public Class clsTree
+    Private Root As TreeNode
+    public Sub New(Pcs As List(Of ParentChild))
+        Root = New TreeNode(PCs(0).parent)
+        Root.Nodes.Add(PCs(0).child)
+        For i = 1 To Pcs.Count - 1
+            Dim p As TreeNode = Search(Pcs(i).parent, Root)
+            p.Nodes.Add(pcs(i).child)
+        Next
+    End Sub
+    Public Function Search(p As String, node As TreeNode) As TreeNode
+        If node.Text = p Then Return node
+        For i = 0 To node.Nodes.Count -1 
+            Dim r As TreeNode = Search(p, node.Nodes(i))
+            If r IsNot Nothing Then Return r
+        Next
+        Return Nothing
+    End Function
+    Public Sub Output(tree As TreeView)
+        tree.Node.Add(root)
+    End Sub
+End Class

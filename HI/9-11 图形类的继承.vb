@@ -55,3 +55,43 @@ Public Class frmTest
         Elems.Append(elem)
     End Sub
 End Class
+
+Public MustInherit Class clsElem
+    MustOverride Sub Draw(g As Graphics)
+End Class
+Public Class clsLine
+    Inherit clsElem
+    Private sp As Point, ep As Point
+    Public Overrides Sub Draw (g As Graphics)
+        g.drawLine(Pens.Blue, sp, ep)
+    End Sub
+End Class
+
+Public Class clsElems
+    Private elems As List(Of clsElem)
+    Public Sub Draw(g As Graphics)
+        For i = 0 To elems.Count - 1
+            elems(i).Draw(g)
+        Next
+    End Sub
+End Class
+
+Public Class frmTest
+    Dim elems As List(Of clsElem)
+    Dim sp As Point
+    Public Sub picCanvas_MouseDown(sender As Object, e As MouseEventsArgs) Handles picCanvas.MouseDown
+        sp = e.Location
+    End Sub
+    Public Sub picCanvas_MouseUp(sender As Object, e MouseEventsArgs) Handles picCanvas.MouseUp
+        Dim ep As point = e.Location
+        Dim elem As clsElem
+        If rbLine.Checked = True Then 
+            elem = New clsLine(sp, ep)
+        End If
+        If rbCircle.Checked = True Then 
+            Dim r As Single = Sqrt((ep.X - sp. X) * (ep.X - sp. X), (ep.y - sp. y) * (ep.y - sp. y))
+            elem = New clsCircle(sp, r)
+        End If
+        elems.Append(elem)
+    End Sub
+End Class
