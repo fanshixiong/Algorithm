@@ -2,7 +2,7 @@
 1. 定义结构体ParentChild
 2. New中先将PCs(0)加入Root，遍历每一对序偶，找到parent对应的TreeNode加入child
 3. Search中递归寻找parent
-4. 加入TreeView控件
+4. 加入TreeView控件  
 */
 Structure ParentChild
     Public parent As String
@@ -20,7 +20,7 @@ Public Class clsParentChilds
         Next
     End Sub
 
-    Public Function Search(Byval Node As treeNode, ByVal parent As String) As TreeNode
+    Public Function Search(Byval Node As TreeNode, ByVal parent As String) As TreeNode
         if Node.Text = parent Then Return Node
         For i = 0 To Node.Nodes.count - 1
             Dim r As TreeNode = Search(Node.Nodes(i), parent)
