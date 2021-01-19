@@ -57,3 +57,47 @@ Public Class frmTest
         lstProgress1.SelectedIndex = lstProgress1.Items.Count - 1
     End Sub
 End Class
+Public Class clsWorkA
+    Delegate Sub AppendMessage(id As Integer, msg As String)
+    Private ReportProgress As AppendMessage
+    Private worker As BackgroundWorker
+    Public Event WorkerComplete(res As WorkerResult)
+    Private frmOut As frmTest
+    Private para As WorkerPara
+    Public Sub New(para As WorkerPara, frmOut As frmTest)
+        Me.para = para, Me.frmOut = frmOut
+        worker = New BackgroundWorker
+        AddHandle worker.DoWork, AddressOf DoWork
+        AddHandle worker.RunWorkerCompleted, AddressOf Completed
+        ReportProgress = New AppendMessage(AddressOf frmOut.AppendMessage)
+    End Sub
+    Public Sub Run()
+        worker.RunWorkerAsync(True)
+    End Sub
+    Public Sub DoWorker(sender, e As DoWorkerEventArgs)
+        Dim sum As Integer = 0
+        For i = 0 To 2000
+            For j = para.n1 To para.n2
+                sum += 1
+            Next
+            frmOut.Invoke(ReportProgress, i, sum.ToString)
+        Next
+        Dim res As WorkerResult
+        res.id = para.id, res.result = sum
+        e.Result = res
+    End Sub
+    Public Sub Completed(sender, e As RunWorkerCompletedEventArgs)
+        RaiseEvent WorkerComplete(e.result)
+    End Sub
+End Class
+
+Public Class frmTest
+    Private worker As clsWorkA
+    Sub Worker_Completed(res As WorkerResult) Handles worker.WorkerComplete
+        lstProgress1.Items.Add(res.result)
+    End Sub
+    Sub AppendMessage(id As Integer, msg As String)
+        lstProgress1.Items.add(msg)
+        lstProgress1.SelectedIndex = lstProgress1.items.Count-1
+    End Sub
+End Class
