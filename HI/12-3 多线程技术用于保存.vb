@@ -8,7 +8,7 @@
 */
 Public Class frmTest
     Dim WithEvents Bitmaps As clsBitmap
-    Dim WithEvents Worker As BackgroundWorker
+    Dim WithEvents Worker As BackgroundWorker // ?
 
     Private Sub btnOpen_Click(Byval sender As Object, Buval e As EventsArgs) Handles btnOpen.Click
         Bitmaps = New clsBitmap("1.jpg")

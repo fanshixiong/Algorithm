@@ -15,7 +15,7 @@ End Class
 
 Public Class clsElems
     Private Elems As List(Of clsElem)
-    Event ChangedSelected(e As clsElem) //参数
+    Event ChangedSelected(e As clsElem) //参数 ?????
     Sub SelectByPoint (Byval p As Point)
         For i = 0 To Elems.Count - 1
             If Elems(i).SelectByPoint(p) = True Then
@@ -24,17 +24,17 @@ Public Class clsElems
             End If
         Next
     End Sub
-    Sub Draw()
+    Sub Draw(ByVal g As Graphics, e as clsElem) // ?????
         draw()
     End Sub
 End Class
 Public Class frmTest
     Dim WithEvents Elems As clsElems
     Private Sub picCanvas_MouseDown(Byval sender As Object, Byval e As MouseEventsArgs) Handles picCanvas.MouseDown
-        Elems.SelectByPoint(e.Location)
+        Elems.SelectByPoint(e.Location) // ??????
     End Sub
     Private Sub ElemsDraw(e As clsElem) Handles Elems.ChangedSelected
         Dim g As Graphics = picCanvas.CreateGraphics()
-        Elems.Draw(g)
+        Elems.Draw(g, e) // ??
     End Sub
 End Class

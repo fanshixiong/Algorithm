@@ -53,7 +53,7 @@ Public Class frmTest
         lstProgress1.Items.Add(result.sum)
     End Sub
     Public Sub AppendMessage(id As Integer, msg As String)
-        lstProgress1.Items.Add(msg)
+        lstProgress1.Items.Add(msg) //items
         lstProgress1.SelectedIndex = lstProgress1.Items.Count - 1
     End Sub
 End Class

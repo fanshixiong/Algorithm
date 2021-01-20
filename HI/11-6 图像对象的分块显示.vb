@@ -36,6 +36,7 @@ End Class
 
 Public Class frmTest
     Dim WithEvents bk As clsBitmap
+    // ?
     Private Sub gameStart_click(Byval sender As Object, Byval e As EventsArgs) Handles gameStart.Click
         bk = New clsBitmap("bk.jpg")
         bk.Start()

@@ -6,7 +6,7 @@
 5. clsOps: txt, Ops,  its, UnDo(), ReDo()
 */
 Public MustInherit clsOp
-    MustOverride Sub DoWork(Byval txt As TextBox)
+    MustOverride Sub DoWork(Byval txt As TextBox) /// ?
     MustOverride Sub UnDo(Byval txt As TextBox)
 End Class
 Public Class clsDeleteOp

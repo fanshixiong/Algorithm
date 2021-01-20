@@ -22,7 +22,7 @@ End Class
 Public Class clsFood
     Inherit clsBox
     Public Overrides Sub Draw(Byval g As Graphics)
-        g.DrawRectangle(Pens.Yellow, x-r, x-r, 2*r, 2*r)
+        g.FillEllipse(Brushes.GreenYellow, x-r, x-r, 2*r, 2*r)
     End Sub
 End Class
 
@@ -58,7 +58,7 @@ Public Class clsGame
         ticker.Enable = True
     End Sub
     Public Sub ticker_Tick(Byval sender As Object, Byval e As EventsArgs) Handles ticker.Tick
-        snale.Move()
+        snake.Move()
         RaiseEvent Changed()
     End Sub
     Public Sub Draw(Byval g As Graphics)

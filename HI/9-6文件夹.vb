@@ -6,8 +6,8 @@
 5. Search: 计算files的中满足的，递归计算dirs中的
 */
 Public class clsDirs
-    Private files() As String
-    Private dirs() As clsDirs
+    Private files() As String // 两个括号
+    Private dirs() As clsDirs  // 类型clsDirs
 
     public Sub New(Byval path As String)
         files = Directory.GetFiles(path)
@@ -34,7 +34,7 @@ Public class clsDirs
             If d > max Then max = d
         Next
 
-        Return max
+        Return max + 1  // 1/+
     End Function
 
     public Function FilesCount() As Integer
@@ -91,3 +91,10 @@ Public Class clsFile
         return res
     End Function
 End Class
+
+Public class clsdirs
+    Dim files As String
+    Dim dirs As clsdirs
+    Public Sub New()
+    End Sub
+end class

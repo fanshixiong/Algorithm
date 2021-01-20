@@ -8,19 +8,20 @@ Public Class frmTest
     Dim sp As Point, lastElem As clsElem
     Dim LeftMouseDown As Boolean
 
+    // ?
     Private Sub frmTest_Load(ByVal sender As System.Object, ByVal e As EventsArgs) Handles MyBase.Load
-        Elems = New clsElems
+        Elems = New clsElems 
         LeftMouseDown = False
     End Sub
     Private Sub picCanvas_MouseDown(Byval sender As Object, ByVal e As MouseEventsArgs) Handles picCanvas.MouseDown
-        sp = e.Location
+        sp = e.Location //.
         LeftMouseDown = True
         lastElem = new clsLine(sp, ep)
     End Sub
     Private Sub picCanvas_MouseMove(Byval sender As Object, ByVal e As MouseEventsArgs) Handles picCanvas.MouseMove
         If LeftMouseDown = False Then Return
-        Dim g As Graphics = picCanvas.CreateGraphics()
-        Dim ep = e.Location
+        Dim g As Graphics = picCanvas.CreateGraphics() //?
+        Dim ep = e.Location //?
         If lastElem IsNot Nothing Then
             lastElem.Draw(g, Pens.White)
         End If
@@ -29,8 +30,15 @@ Public Class frmTest
     End Sub
     Private Sub picCanvas_MouseUp(Byval sender As Object, ByVal e As MouseEventsArgs) Handles picCanvas.MouseUp
         LeftMouseDown = False
-        ep = e.Location
+        ep = e.Location //?
         Dim elem As clsElem = New clsLine(sp, ep)
         Elems.Append(lastElem)
+        Draw() //???
+    End Sub
+    Private Sub Draw()// ??????
+        Dim g As Graphics = picCanvas.CreateGraphics()
+        g.clear(Color.White)
+        Elems.Draw(g)
+        Elems.display(lstInfo)
     End Sub
 End Class

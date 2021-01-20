@@ -4,10 +4,11 @@
 */
 Public Class clsBitmap
     Private source As Bitmap
+    // ?
     Public Sub New(Byval fname As String)
         source = New Bitmap(fname)
     End Sub
-
+    // ?
     Public Function Gray() As Bitmap
         Dim Target As New Bitmap(Source)
         For i = 0 To Target.width - 1

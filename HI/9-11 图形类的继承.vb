@@ -13,7 +13,7 @@ public Class clsCircle
     Inherit clsElem
     Private cp As Point, r As Single
     Public Overrides Sub Draw(Byval g As System.Drawing.Graphics)
-        g.DrawEllipse(Pens.Blue, cp.X - r, cp.Y - r, r, r)
+        g.DrawEllipse(Pens.Blue, cp.X - r, cp.Y - r, r, r) // 五个参数
     End Sub
 End Class
 

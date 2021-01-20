@@ -1,7 +1,7 @@
 /*
 1. 定义clsGame类，一个WithEvents事件ticker和Event HasChanged
 2. Start
-3. ticker_Tick, RaiseEvent HasChanged
+3. ticker_Tick, RaiseEvent HasChanged 
 4. frmTest中game.HasChanged实现
 */
 Public Class clsGame
@@ -21,10 +21,10 @@ Public Class clsGame
         ticker.Enable = True
     End Sub
     Private Sub ticker_Tick(Byval sender As Object, Byval e As System.EventArgs) Handles ticker.Tick
-        ball.Move(box)
+        ball.Move(box) //?
         RaiseEvent HasChanged()
     End Sub
-    Public Sub Draw(ByVal g As Graphics)
+    Public Sub Draw(ByVal g As Graphics) // ?
         ball.Draw(g)
         box.Draw(g)
     End Sub

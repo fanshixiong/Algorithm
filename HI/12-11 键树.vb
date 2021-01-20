@@ -28,7 +28,7 @@ Public Class clsKeyTree
         Dim separator() As Char = {vbLf, vbCr}
         Dim Words() As String = content.Split(separator, StringSplitOptions.RemoveEmptyEntries)
         For i = 0 To Words.Count - 1
-            InsertWord(Words(i).ToLower)
+            InsertWord(Words(i).ToLower) // tolower
         Next
     End Sub
 
