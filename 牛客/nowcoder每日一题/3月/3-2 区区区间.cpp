@@ -41,7 +41,7 @@ ll query(int rt, int l, int r, int L, int R){
     ll res = 0;
     int mid = (l + r) >> 1;
     if(L <= mid) res += query(rt << 1, l, mid, L, R);
-    if(mid < R) query(rt << 1 | 1, mid + 1, r, L, R);
+    if(mid < R) res += query(rt << 1 | 1, mid + 1, r, L, R);
     return res;
 }
 void build(int rt, int l, int r){
