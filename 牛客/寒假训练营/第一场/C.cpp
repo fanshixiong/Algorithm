@@ -2,7 +2,7 @@
 using namespace std;
 #define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
-const int maxn = 2e5 + 10;
+const int maxn = 3e5 + 10;
 const ll mod = 1e9 + 7;
 int n, cnt = 0;
 vector<int> G[maxn];
@@ -25,7 +25,7 @@ void dfs2(int u, int fa){
 		if(v == fa) continue;
 		if(vis[v] == vis[u]) col[v] = col[u];
 		else col[v] = col[u] ^ 1;
-		dfs(v, u);
+		dfs2(v, u);
 	}
 }
 void solve(){
@@ -40,16 +40,16 @@ void solve(){
 	memset(vis, 0, sizeof vis);
 	dfs(1, 0);
 
-	if(flag) {
+	if(flag || vis[0] != 0) {
 		cout << -1 << endl;
 		return;
 	}
-	for(int i = 1; i <= n; i++) cout << vis[i] << " ";
-	cout << endl;
+	//for(int i = 1; i <= n; i++) cout << vis[i] << " ";
+	//cout << endl;
 
 	col[1] = 1;
 	dfs2(1, 0);
-	for(int i = 1; i <= n; i++) cout << col[i] << " ";
+	for(int i = 1; i <= n; i++) cout << (col[i] == 1 ? 'R' : 'B');
 	cout << endl;
 }
 int main(){
