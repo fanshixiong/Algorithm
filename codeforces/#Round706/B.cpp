@@ -2,26 +2,28 @@
 using namespace std;
 #define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
-const int maxn = 2e5 + 10;
-ll a[maxn], c[maxn];
-int n;
+const int maxn = 1e5 + 10;
+int a[maxn];
+int n, k;
 void solve(){
-    cin >> n;
-    for (int i = 1; i <= n; i++) cin >> a[i];
-
-    ll ans = 1e18;
-    
-    ll sums = 0;
-    for(int i = 2; i <= n; i++)  c[i] = abs(a[i]-a[i-1]), sums += c[i];
-
-    for(int i = 2; i < n; i++){
-        ans = min(ans, sums - c[i] - c[i + 1] + abs(a[i+1] - a[i-1]));
-        // cout << c[i] << " " << sums - c[i] - c[i + 1] + abs(a[i+1] - a[i-1]) << endl;
+    cin >> n >> k;
+    unordered_map<int, bool> vis;
+    for(int i = 1; i <= n; i++) {
+        cin >> a[i];
+        vis[a[i]] = 1;
     }
-    ans = min(ans, sums - c[2]);
-    ans = min(ans, sums - c[n]);
-
-    cout << ans << endl;
+    sort(a+1, a+1+n);
+    if(a[n] == n-1){
+      cout << 1ll * (n + k) << endl; 
+      return;
+    }
+    int p;
+    for(int i = 1; i <= n; i++){
+        if(a[i] != i-1){p = i-1; break;}
+    }
+    // cout << p;
+    if(vis[(p + a[n] + 1) / 2] || k == 0) cout << n << endl;
+    else cout << n + 1 << endl;
 }  
 int main(){
     IOS; int t; cin >> t;

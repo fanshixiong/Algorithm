@@ -2,34 +2,26 @@
 using namespace std;
 #define ll long long
 #define IOS ios_base::sync_with_stdio(0); cin.tie(0);cout.tie(0);
-const int maxn = 2e3 + 10;
+const int maxn = 1e5 + 10;
 const int INF = 0x3f3f3f3f;
 
-string a[maxn];
+ll a[maxn], b[maxn];
 
 void solve(){
-    int ans[10] = {0};
-    int maxr[10] = {0}, minr[10];
-    int maxc[10] = {0}, minc[10];
-    for(int i = 0; i < 10; ++i) minr[i] = minc[i] = INF;
     int n; cin >> n;
-    for(int i = 0; i < n; ++i) {
-        cin >> a[i];
-        for(int j = 0; j < n; ++j) {
-            int x = a[i][j] - '0';
-            maxr[x] = max(maxr[x], i), minr[x] = min(minr[x], i);
-            maxc[x] = max(maxc[x], j), minc[x] = min(minc[x], j);
-        }
+    int ca = 0, cb = 0;
+    for(int i = 1; i <= 2 * n; i++){
+        int x, y; cin >> x >> y;
+        if(x == 0) b[++ca] = abs(y);
+        if(y == 0) a[++cb] = abs(x);
     }
-    for(int i = 0; i < n; ++i) {
-        for(int j = 0; j < n; ++j) {
-            int x = a[i][j] - '0';
-            ans[x] = max(ans[x], max(i-minr[x], maxr[x]-i) * max(n-j-1, j));
-            ans[x] = max(ans[x], max(j-minc[x], maxc[x]-j) * max(n-i-1, i));
-        }
+    sort(a + 1, a + 1 + n);
+    sort(b + 1, b + 1 + n);
+    double ans = 0.0;
+    for(int i = 1; i <= n; i++){
+        ans += sqrt(a[i] * a[i] + b[i] * b[i]);
     }
-    for(int i = 0; i < 10; ++i) cout << ans[i] << " ";
-    cout << endl;
+    printf("%.15lf\n", ans);
 }
 int main(){
     IOS; int t; cin >> t;
