@@ -1,0 +1,13 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class FilSystem{
+public:
+	map<string, int> 
+	void mkdir(){
+	
+	}
+}
+int main(){
+	return 0;
+}
