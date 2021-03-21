@@ -5,26 +5,15 @@ using namespace std;
 const int maxn = 2e5 + 10;
 const ll mod = 1e9 + 7;
 void solve(){
-	int n; cin >> n;
-	int f = 0;
-	if(n & 1){
-		for(int i = 0; i < n; i++){
-			for(int j = 0; j < n; j++){
-				cout << f;
-				f = !f;
-			}
-			cout << endl;
-		}
+	ll m, n;
+	cin >> m >> n;
+	ll x = __gcd(m, n);
+	ll a = m / x, b = n / x;
+	if((a & 1) && (b & 1)){
+		cout << x << endl;
 	}
 	else{
-		for(int i = 0; i < n; i++){
-			for(int j = 0; j < n; j++){
-				cout << f;
-				f = !f;
-			}
-			f = !f;
-			cout << endl;
-		}
+		cout << 0 << endl;
 	}
 }
 int main(){
