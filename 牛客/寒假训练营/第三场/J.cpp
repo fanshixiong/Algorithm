@@ -5,26 +5,17 @@ using namespace std;
 const int maxn = 1e6 + 10;
 const ll mod = 1e9 + 7;
 int n;
-int a[maxn];
+ll f[maxn];
 void solve(){
 	cin >> n;
-	for(int i = 0; i < n; i++) cin >> a[i];
+	f[0] = 1; f[1] = 2; f[2] = 3;
+	for(int i = 3; i <= 40; i++){
+		f[i] = f[i-1] + f[i-2];
+	}	
+	for(int i = 41; i <= n; i++) f[i] = 1;
+	for(int i = 1; i <= n; i++) cout << f[i] << " ";
 
-	int odds = 0, evens = 0;
-	for(int i = 0; i < n; i++){
-		if(a[i] & 1) odds ++;
-		else evens ++;
-	}
-	if(evens <= odds){
-		cout << "NiuMei" << endl;
-		return;
-	} 
-	if(evens == 0) odds --;
-	while(odds > 0 && odds + evens > 1){
-		odds -= 2;
-	}
-	if(odds) cout << "Niuniu" << endl;
-	else cout << "NiuMei" << endl;
+	cout << endl;
 }
 int main(){
     IOS; int t = 1;
