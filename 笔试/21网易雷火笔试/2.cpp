@@ -23,10 +23,10 @@ int main(){
 
 	for(auto c : points){
 		int x = c.first, y = c.second;
-		double top = 1.0 * y + n - 0.5;
-		double bot = 1.0 * y - n - 0.5;
-		double lef = 1.0 * x - n - 0.5;
-		double rig = 1.0 * x + n - 0.5;
+		double top = 1.0 * y + 1.0 * n + 0.5;
+		double bot = 1.0 * y - 1.0 * n - 0.5;
+		double lef = 1.0 * x - 1.0 * n - 0.5;
+		double rig = 1.0 * x + 1.0 * n + 0.5;
 		int us = 0;
 		for(auto c : points){
 			int p = c.first, q = c.second;
