@@ -1,36 +1,21 @@
 #include<bits/stdc++.h>
 using namespace std;
+#define ll long long
 const int maxn = 1e5 + 10;
-int a[maxn], b[maxn], p[maxn];
-bool cmp(int x, int y){
-	return a[x] == a[y] ? b[x] > b[y] : a[x] < a[y];
-}
+const ll mod = 1e9+7;
+int a[maxn];
 void solve(){
-	int n; cin >> n;
-	for(int i = 0; i < n; i++) cin >> a[i];
-	for(int i = 0; i < n; i++) cin >> b[i];
+	string s; cin >> s;
 
-	for(int i = 1; i <= n; i++) p[i] = i;
-
-	sort(p, p + n, cmp);
-
-	int ans = 0;
-	unordered_map<int, int> ct;
-	for(int i = 0; i < n; i++) ct[a[i]]++;
-	int i = 0;
-	while(i < n){
-		int x = p[i];
-		while(ct[a[x]] > 1){
-			i++;
-			ct[a[x]]--;
-			int t = a[x];
-			while(ct[t]) t++;
-			ans += (t-a[x]) * b[x];
-			ct[t] = 1;
+	ll ans = 0, cnt = 0;
+	for(int i = s.size()-1; i >= 0; i--){
+		if(s[i] == 'b') cnt++;
+		else{
+			ans = (ans + cnt) % mod;
+			cnt *= 2;
 		}
-		i++;
 	}
-	cout << ans << endl;
+	cout << ans % mod << endl;
 }
 int main(){
 	int t; t = 1;
