@@ -26,6 +26,8 @@ void solve(){
 */
 int main(){
 	cout << (12 ^ 4) << endl;
+	int a[4] = {0};
+	for(int i = 0; i < 4; i++) cout << a[i] << " ";
 	int t; cin >> t;
 	while(t--){
 		solve();
